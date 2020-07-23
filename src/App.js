@@ -1,19 +1,31 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import Router from "./Router";
+import { BrowserRouter } from 'react-router-dom';
+import {Provider} from 'react-redux';
+import {createStore} from 'redux';
+import reducer from './reducers';
+import middleware from './middleware';
+import {composeWithDevTools} from 'redux-devtools-extension';
+import Header from './Header/Header';
+import WIP from './components/WIP';
+
+const store = createStore(reducer, composeWithDevTools());
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          That's right. I have my own website now.
-        </p>
-        <p>
-            -Dylan
-        </p>
-      </header>
+    <div>
+        <Provider store={store}>
+        <BrowserRouter>
+    	<div className="App">
+          <header>
+            <Header/>
+          </header>
+		</div>
+                <WIP/>
+                <Router/>
+            </BrowserRouter>
+        </Provider>
     </div>
   );
 }
