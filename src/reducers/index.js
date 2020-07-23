@@ -7,7 +7,6 @@ function decks (state = [], action){
 		case INITIAL_DATA :
 			return action.decks
 		case ADD_CARD :
-			let num = action.index;
 			return update(state, {[action.index]: {cards: {$push: action.card}}})
 		case ADD_DECK : 
 			return state.concat(action.deck)

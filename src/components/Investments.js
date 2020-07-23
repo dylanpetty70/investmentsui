@@ -6,10 +6,6 @@ import dilbert from '../images/dilbert1.jpg';
 
 class Investments extends Component {
 
-	constructor(props){
-		super(props);
-	}
-
 
 	render(){
 		return(

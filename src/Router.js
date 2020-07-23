@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
-import {render} from "react-dom";
-import { Redirect, Route, Switch, withRouter } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import Home from "./components/Home";
 import Investments from "./components/Investments";
 import Foresight from "./components/Foresight";

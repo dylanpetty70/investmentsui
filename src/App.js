@@ -5,7 +5,6 @@ import { BrowserRouter } from 'react-router-dom';
 import {Provider} from 'react-redux';
 import {createStore} from 'redux';
 import reducer from './reducers';
-import middleware from './middleware';
 import {composeWithDevTools} from 'redux-devtools-extension';
 import Header from './Header/Header';
 import WIP from './components/WIP';

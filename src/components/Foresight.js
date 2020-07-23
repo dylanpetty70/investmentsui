@@ -6,10 +6,6 @@ import dilbert from '../images/dilbert2.gif';
 
 class Foresight extends Component {
 
-	constructor(props){
-		super(props);
-	}
-
 	render(){
 		return(
 			<div className="App">

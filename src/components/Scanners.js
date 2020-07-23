@@ -6,10 +6,6 @@ import dilbert from '../images/dilbert3.gif';
 
 class Scanners extends Component {
 
-	constructor(props){
-		super(props);
-	}
-
 	onChangeQues(text){
 		this.setState({question: text, answer: this.state.answer})
 	}
