@@ -1,20 +1,19 @@
-import { INITIAL_DATA, ADD_CARD, ADD_DECK, DELETE_DECK } from '../actions/index';
 import { combineReducers } from 'redux';
-import update from 'immutability-helper';
 
-function decks (state = [], action){
-	switch (action.type) {
-		case INITIAL_DATA :
-			return action.decks
-		case ADD_CARD :
-			return update(state, {[action.index]: {cards: {$push: action.card}}})
-		case ADD_DECK : 
-			return state.concat(action.deck)
-		case DELETE_DECK :
-			return action.decks
-		default :
-			return state
-	}
-}
+import govBondRate from './govBondRate';
+import inflationRate from './inflationRate';
+import SPYCandle from './SPYCandle';
+import stockCandle from './stockCandle';
+import stockFinancials from './stockFinancials';
+import stockProfile from './stockProfile';
+import jacobVal from './jacobVal';
 
-export default combineReducers({decks})
+export default combineReducers({
+	govBondRate,
+	inflationRate,
+	SPYCandle,
+	stockCandle,
+	stockFinancials,
+	stockProfile,
+	jacobVal
+})

@@ -4,9 +4,6 @@ import { connect } from 'react-redux';
 
 class Login extends Component {
 
-	onChangeQues(text){
-		this.setState({question: text, answer: this.state.answer})
-	}
 
 	render(){
 		return(

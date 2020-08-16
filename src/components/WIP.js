@@ -6,9 +6,7 @@ import Container from 'react-bootstrap/Container';
 
 class Scanners extends Component {
 
-	onChangeQues(text){
-		this.setState({question: text, answer: this.state.answer})
-	}
+
 
 	render(){
 		return(
