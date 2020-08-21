@@ -1,5 +1,5 @@
 import api from './APIFactory';
-
+import {sha256} from 'js-sha256';
 
 let today = new Date();
 let month = today.getMonth() + 1;
@@ -101,3 +101,77 @@ export async function genStockQuote(stock){
 	return data;
 }
 
+export async function checkPassword(username, password){
+    let result = await api('https://dylan-s-database.firebaseio.com/ruse/users.json', {
+			headers: {
+			    "Content-type": "application/json; charset=UTF-8",
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Methods": "POST, GET, OPTIONS, DELETE, PUT",
+                "Access-Control-Allow-Headers": "append,delete,entries,foreach,get,has,keys,set,values,Authorization"
+			}})
+    let temp = {};
+    if(result.data[username]){
+        if(sha256(password) === result.data[username].password){
+            temp['check'] = true;
+            temp['userInfo'] = {...result.data[username].userInfo, username};
+	    } else {
+            temp['check'] = false;
+            temp['userInfo'] = {};
+	    }
+	}else {
+        temp['check'] = false;
+        temp['userInfo'] = {};
+	}
+    return (temp);
+}
+
+export async function newUser(username1, firstName1, lastName1, password1) {
+	let result = await api('https://dylan-s-database.firebaseio.com/ruse/users/'+username1+'.json', {
+		headers: {
+			"Content-type": "application/json; charset=UTF-8",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "POST, GET, OPTIONS, DELETE, PUT",
+            "Access-Control-Allow-Headers": "append,delete,entries,foreach,get,has,keys,set,values,Authorization"
+		}})
+    if(result.data === null){
+        let result = await api.put('https://dylan-s-database.firebaseio.com/ruse/users/'+username1+'.json',
+        {password: sha256(password1), userInfo: {firstName: firstName1, lastName: lastName1, username: username1}}
+        )
+        return result.status;
+	} else {
+        return false;
+	}
+}
+
+export async function newStock(user, stock) {
+    await api.post('https://dylan-s-database.firebaseio.com/ruse/users/'+user+'/userInfo/userStocks.json',
+        {'stock': stock, count: 1}
+        )
+	let result = await api('https://dylan-s-database.firebaseio.com/ruse/users/'+user+'/userInfo/userStocks.json', {
+		headers: {
+			"Content-type": "application/json; charset=UTF-8",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "POST, GET, OPTIONS, DELETE, PUT",
+            "Access-Control-Allow-Headers": "append,delete,entries,foreach,get,has,keys,set,values,Authorization"
+		}})
+    return result.data;
+}
+
+export async function deleteStock(user, key) {
+    await api.delete('https://dylan-s-database.firebaseio.com/ruse/users/'+user+'/userInfo/userStocks/' + key +'.json', {
+		headers: {
+			"Content-type": "application/json; charset=UTF-8",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "POST, GET, OPTIONS, DELETE, PUT",
+            "Access-Control-Allow-Headers": "append,delete,entries,foreach,get,has,keys,set,values,Authorization"
+		}
+    })
+    let result = await api('https://dylan-s-database.firebaseio.com/ruse/users/'+user+'/userInfo/userStocks.json', {
+		headers: {
+			"Content-type": "application/json; charset=UTF-8",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "POST, GET, OPTIONS, DELETE, PUT",
+            "Access-Control-Allow-Headers": "append,delete,entries,foreach,get,has,keys,set,values,Authorization"
+		}})
+    return result.data;
+}

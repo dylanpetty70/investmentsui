@@ -7,6 +7,9 @@ import stockCandle from './stockCandle';
 import stockFinancials from './stockFinancials';
 import stockProfile from './stockProfile';
 import jacobVal from './jacobVal';
+import user from './user';
+import userStatus from './userStatus';
+import multipleStocks from './multipleStocks';
 
 export default combineReducers({
 	govBondRate,
@@ -15,5 +18,8 @@ export default combineReducers({
 	stockCandle,
 	stockFinancials,
 	stockProfile,
-	jacobVal
+	jacobVal,
+	user,
+	userStatus,
+	multipleStocks,
 })

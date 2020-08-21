@@ -11,6 +11,8 @@ class Header extends Component {
 		return(
 			<div className="App">
 				<Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
+                {(this.props.userStatus === true) ?
+                    <>
                   <Navbar.Brand href="/">Ruse Investments</Navbar.Brand>
                   <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                   <Navbar.Collapse id="responsive-navbar-nav">
@@ -20,8 +22,22 @@ class Header extends Component {
                     </Nav>
                     <Nav>
                       <Nav.Link href="/login">Log In</Nav.Link>
+                      <Nav.Link><div style={{paddingLeft: '30px',color: 'white'}}>Hello, {this.props.user.firstName}</div></Nav.Link>
                     </Nav>
                   </Navbar.Collapse>
+                    </>
+                    : 
+                    <>
+                    <Navbar.Brand href="/">Ruse Investments</Navbar.Brand>
+                    <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+                    <Navbar.Collapse id="responsive-navbar-nav">
+                    <Nav className="mr-auto">
+                        <Nav.Link href="/login">Log In</Nav.Link>
+                    </Nav>
+                    </Navbar.Collapse>
+                    </>
+                    }
+                    
                 </Navbar>
 			</div>
 		)
@@ -30,7 +46,8 @@ class Header extends Component {
 
 const mapStateToProps = state => {
 	return{
-		
+		userStatus: state.userStatus,
+        user: state.user,
 	}
 }
 

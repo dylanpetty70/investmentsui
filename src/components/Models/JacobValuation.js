@@ -153,16 +153,7 @@ class JacobValuation extends Component {
 		for(let i = 0; i < reporti.length; i++){
 			let temp = 0;
 			for(let j = 0; j < this.props.stockFinancials[reporti[i]].report.cf.length; j++){
-				if(this.props.stockFinancials[reporti[i]].report.cf[j].concept === "IncreaseDecreaseInOtherOperatingAssets"){
-					temp += this.props.stockFinancials[reporti[i]].report.cf[j].value;
-				}
-				else if(this.props.stockFinancials[reporti[i]].report.cf[j].concept === "t:IncreaseDecreaseInNetOperatingAssetsEquipInstallmentReceivablesAndRelatedAssetSales"){
-					temp += this.props.stockFinancials[reporti[i]].report.cf[j].value;
-				}
-				else if(this.props.stockFinancials[reporti[i]].report.cf[j].concept === "IncreaseDecreaseInOtherOperatingCapitalNet"){
-					temp += this.props.stockFinancials[reporti[i]].report.cf[j].value;
-				}
-				else if(this.props.stockFinancials[reporti[i]].report.cf[j].concept === "NetCashProvidedByUsedInOperatingActivities"){
+				if(this.props.stockFinancials[reporti[i]].report.cf[j].concept.includes('Operating')){
 					temp += this.props.stockFinancials[reporti[i]].report.cf[j].value;
 				}
 			}
@@ -172,13 +163,13 @@ class JacobValuation extends Component {
 		for(let i = 0; i < reporti.length; i++){
 			let temp = 0;
 			for(let j = 0; j < this.props.stockFinancials[reporti[i]].report.bs.length; j++){
-				if(this.props.stockFinancials[reporti[i]].report.bs[j].concept === "CustomerAdvancesAndDepositsCurrent"){
+				if(this.props.stockFinancials[reporti[i]].report.bs[j].concept.includes('Payable')){
 					temp += this.props.stockFinancials[reporti[i]].report.bs[j].value;
 				}
-				else if(this.props.stockFinancials[reporti[i]].report.bs[j].concept === "AccountsPayableAndAccruedLiabilitiesCurrent"){
+				else if(this.props.stockFinancials[reporti[i]].report.bs[j].concept.includes('Receivable')){
 					temp += this.props.stockFinancials[reporti[i]].report.bs[j].value;
 				}
-				else if(this.props.stockFinancials[reporti[i]].report.bs[j].concept === "OtherAssetsCurrent"){
+				else if(this.props.stockFinancials[reporti[i]].report.bs[j].concept.includes('Current')){
 					temp += this.props.stockFinancials[reporti[i]].report.bs[j].value;
 				}
 			}
@@ -219,7 +210,6 @@ class JacobValuation extends Component {
 	stockInfo(){
 		let shareOutstanding = this.props.stockProfile.shareOutstanding * 1000000;
 		let valuation = this.props.jacobVal.DCF/shareOutstanding;
-		console.log(valuation);
 		let reality = this.props.stockCandle[0];
 
 		this.props.handleUpdateValuation(formatter.format(valuation));

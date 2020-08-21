@@ -12,6 +12,7 @@ class Router extends Component {
         <div>
         <Switch>
                 <Route exact path="/" component={Home} />
+                <Route exact path="/" component={Login} />}
                 <Route path="/models" component={Models} />
                 <Route path="/login" component={Login} />
                 <Route path="/why-are-you-trying-to-break-my-site" component={RedirectPage} />
