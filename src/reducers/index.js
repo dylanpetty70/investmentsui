@@ -10,6 +10,7 @@ import jacobVal from './jacobVal';
 import user from './user';
 import userStatus from './userStatus';
 import multipleStocks from './multipleStocks';
+import dndInfo from './dndInfo';
 
 export default combineReducers({
 	govBondRate,
@@ -22,4 +23,5 @@ export default combineReducers({
 	user,
 	userStatus,
 	multipleStocks,
+	dndInfo,
 })

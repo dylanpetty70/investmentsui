@@ -26,13 +26,11 @@ const store = createStore(persistedReducer, composeWithDevTools(middleware));
 const persistor = persistStore(store);
 
 ReactDOM.render(
-  <React.StrictMode>
     <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>
     <App />
     </PersistGate>
-    </Provider>
-  </React.StrictMode>,
+    </Provider>,
   document.getElementById('root')
 );
 

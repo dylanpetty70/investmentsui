@@ -19,6 +19,7 @@ class Header extends Component {
                     <Nav className="mr-auto">
                       <Nav.Link href="/">Home</Nav.Link>
                       <Nav.Link href="/models">Models</Nav.Link>
+                      {(this.props.dndInfo.status === true) ? <Nav.Link href="/dnd">DND</Nav.Link> : <></>}
                     </Nav>
                     <Nav>
                       <Nav.Link href="/login">Log In</Nav.Link>
@@ -32,7 +33,8 @@ class Header extends Component {
                     <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                     <Navbar.Collapse id="responsive-navbar-nav">
                     <Nav className="mr-auto">
-                        <Nav.Link href="/login">Log In</Nav.Link>
+                        {(window.location.pathname === '/dndguest') ? <></> : <Nav.Link href="/login">Log In</Nav.Link>}
+                        {(this.props.dndInfo.status === true) ? <Nav.Link href="/dnd">DND</Nav.Link> : <></>}
                     </Nav>
                     </Navbar.Collapse>
                     </>
@@ -48,6 +50,7 @@ const mapStateToProps = state => {
 	return{
 		userStatus: state.userStatus,
         user: state.user,
+        dndInfo: state.dndInfo,
 	}
 }
 

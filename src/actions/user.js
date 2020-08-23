@@ -1,6 +1,7 @@
 import * as api from '../API';
 export const CHECK_PASSWORD = 'CHECK_PASSWORD';
 export const NEW_USER = 'NEW_USER';
+export const DND_STATUS = 'DND_STATUS';
 
 function checkPassword(check, userInfo) {
 	return {
@@ -20,10 +21,18 @@ function newUser(status, firstName, lastName, username) {
 	};
 }
 
+function dndStatus(status) {
+	return {
+		type: DND_STATUS,
+		status,
+	};
+}
+
 export function handleCheckPassword(username, password) {
 	return async (dispatch) => {
 		await api.checkPassword(username, password)
 			.then((result) => {
+				dispatch(dndStatus(false));
 				dispatch(checkPassword(result.check, result.userInfo));
 			});
 	}
@@ -34,10 +43,18 @@ export function handleNewUser(username, firstName, lastName, password, passwordC
 		return async (dispatch) => {
 			await api.newUser(username, firstName, lastName, password)
 				.then((result) => {
+					dispatch(dndStatus(false));
 					dispatch(newUser(result, firstName, lastName, username));
 				});
 		}
+	} else if(passwordCheck === 'dnd'){
+		return async (dispatch) => {
+			dispatch(dndStatus(true));
+		}
 	} else {
-		return '';
+		return async (dispatch) => {
+			dispatch(dndStatus(false));
+			dispatch(newUser(false, '', '', ''));
+		}
 	}
 }

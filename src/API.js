@@ -8,6 +8,30 @@ let year = today.getFullYear();
 
 let key = 'bsrllo748v6tucpgfv0g';
 
+//https://www.dnd5eapi.co/api/spells/acid-arrow/
+/*{
+	"ability-scores": "/api/ability-scores",
+	"classes": "/api/classes",
+	"conditions": "/api/conditions",
+	"damage-types": "/api/damage-types",
+	"equipment-categories": "/api/equipment-categories",
+	"equipment": "/api/equipment",
+	"features": "/api/features",
+	"languages": "/api/languages",
+	"magic-schools": "/api/magic-schools",
+	"monsters": "/api/monsters",
+	"proficiencies": "/api/proficiencies",
+	"races": "/api/races",
+	"skills": "/api/skills",
+	"spellcasting": "/api/spellcasting",
+	"spells": "/api/spells",
+	"starting-equipment": "/api/starting-equipment",
+	"subclasses": "/api/subclasses",
+	"subraces": "/api/subraces",
+	"traits": "/api/traits",
+	"weapon-properties": "/api/weapon-properties"
+	}*/
+
 export async function genGovBondRate(){
 	let lastYear = year - 1;
 	let result = await api('https://www.quandl.com/api/v3/datasets/FRED/DGS30?start_date='+lastYear+'-'+month+'-'+day+'&end_date='+year+'-'+month+'-'+day+'&api_key=qVK5koi1XoCxw1nPuuKz',{
@@ -175,3 +199,90 @@ export async function deleteStock(user, key) {
 		}})
     return result.data;
 }
+
+export async function addNewCharacter(name) {
+	let result = await api('https://dylan-s-database.firebaseio.com/dnd/characters.json', {
+		headers: {
+			"Content-type": "application/json; charset=UTF-8",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "POST, GET, OPTIONS, DELETE, PUT",
+            "Access-Control-Allow-Headers": "append,delete,entries,foreach,get,has,keys,set,values,Authorization"
+		}})
+	let result1 = {...result.data, [name]: ''}
+    await api.put('https://dylan-s-database.firebaseio.com/dnd/characters.json',
+        result1
+        )
+	
+    return result1;
+}
+
+export async function saveCharacter(name, data) {
+	await api.put('https://dylan-s-database.firebaseio.com/dnd/characters/'+name+'.json', 
+		data
+	)
+    let result = await api('https://dylan-s-database.firebaseio.com/dnd/characters.json', {
+		headers: {
+			"Content-type": "application/json; charset=UTF-8",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "POST, GET, OPTIONS, DELETE, PUT",
+            "Access-Control-Allow-Headers": "append,delete,entries,foreach,get,has,keys,set,values,Authorization"
+		}})
+	
+    return result.data;
+}
+
+export async function update5e(){
+	let temp=['ability-scores','conditions', 'damage-types', 'equipment-categories', 'equipment', 'features', 'languages', 'magic-schools', 'monsters', 
+	'proficiencies', 'races', 'skills', 'spellcasting', 'spells', 'starting-equipment', 'subclasses', 'subraces', 'traits', 'weapon-properties']
+	for(let i = 0; i < temp.length; i++){
+		let result = await api('https://www.dnd5eapi.co/api/ability-scores');
+		await api.put('https://dylan-s-database.firebaseio.com/dnd/5e/ability-scores.json',
+		result.data
+		)
+	}
+
+	let result1 = await api('https://dylan-s-database.firebaseio.com/dnd/5e.json', {
+		headers: {
+			"Content-type": "application/json; charset=UTF-8",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "POST, GET, OPTIONS, DELETE, PUT",
+            "Access-Control-Allow-Headers": "append,delete,entries,foreach,get,has,keys,set,values,Authorization"
+		}})
+    return result1.data;
+}
+
+export async function grab5e(){
+	let result = await api('https://dylan-s-database.firebaseio.com/dnd/5e.json', {
+		headers: {
+			"Content-type": "application/json; charset=UTF-8",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "POST, GET, OPTIONS, DELETE, PUT",
+            "Access-Control-Allow-Headers": "append,delete,entries,foreach,get,has,keys,set,values,Authorization"
+		}})
+    return result.data;
+}
+
+export async function update5eDetails(dndInfo){
+	let temp=['ability-scores','conditions', 'classes', 'damage-types', 'equipment-categories', 'equipment', 'features', 'languages', 'magic-schools', 'monsters', 
+	'proficiencies', 'races', 'skills', 'spellcasting', 'spells', 'starting-equipment', 'subclasses', 'subraces', 'traits', 'weapon-properties']
+	for(let i = 0; i < temp.length; i++){
+		for(let j = 0; j < dndInfo.generalInfo[temp[i]].count; j++){
+			if(dndInfo.generalInfo[temp[i]].results[j].url){
+				let result = await api('https://www.dnd5eapi.co' + dndInfo.generalInfo[temp[i]].results[j].url);
+				await api.put('https://dylan-s-database.firebaseio.com/dnd/5e/specifics/'+temp[i]+'/'+result.data.name+'.json',
+				result.data
+			)
+			}
+		}
+	}
+
+	let result1 = await api('https://dylan-s-database.firebaseio.com/dnd/5e.json', {
+		headers: {
+			"Content-type": "application/json; charset=UTF-8",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "POST, GET, OPTIONS, DELETE, PUT",
+            "Access-Control-Allow-Headers": "append,delete,entries,foreach,get,has,keys,set,values,Authorization"
+		}})
+    return result1.data;
+}
+
