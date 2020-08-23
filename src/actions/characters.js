@@ -16,6 +16,15 @@ function saveCharacter(data){
 	}
 }
 
+export function handleGrabCharacters(){
+	return async (dispatch) => {
+		await api.grabCharacters()
+			.then((data) => {
+				dispatch(saveCharacter(data));
+			})
+	}
+}
+
 export function handleUpdateNewCharacter(name) {
 	return async (dispatch) => {
 		await api.addNewCharacter(name)

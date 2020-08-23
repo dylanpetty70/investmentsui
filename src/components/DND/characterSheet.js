@@ -98,6 +98,7 @@ class CharacterSheet extends Component {
 	}
 
     componentDidMount(){
+        
 		if(this.props.dndInfo.characters[this.props.name] !== ''){
             let root = this.props.dndInfo.characters[this.props.name];
             let spells1 = [[],[],[],[],[],[],[],[],[],[]];

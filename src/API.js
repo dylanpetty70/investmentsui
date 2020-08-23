@@ -231,6 +231,18 @@ export async function saveCharacter(name, data) {
     return result.data;
 }
 
+export async function grabCharacters() {
+    let result = await api('https://dylan-s-database.firebaseio.com/dnd/characters.json', {
+		headers: {
+			"Content-type": "application/json; charset=UTF-8",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "POST, GET, OPTIONS, DELETE, PUT",
+            "Access-Control-Allow-Headers": "append,delete,entries,foreach,get,has,keys,set,values,Authorization"
+		}})
+	
+    return result.data;
+}
+
 export async function update5e(){
 	let temp=['ability-scores','conditions', 'damage-types', 'equipment-categories', 'equipment', 'features', 'languages', 'magic-schools', 'monsters', 
 	'proficiencies', 'races', 'skills', 'spellcasting', 'spells', 'starting-equipment', 'subclasses', 'subraces', 'traits', 'weapon-properties']

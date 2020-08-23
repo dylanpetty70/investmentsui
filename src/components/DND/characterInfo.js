@@ -4,7 +4,7 @@ import Form from 'react-bootstrap/Form';
 import { connect } from 'react-redux';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
-import {handleUpdateNewCharacter} from '../../actions/characters';
+import {handleUpdateNewCharacter, handleGrabCharacters} from '../../actions/characters';
 
 class CharacterInfo extends Component {
 
@@ -16,6 +16,10 @@ class CharacterInfo extends Component {
                         };
         this.characterOptions = this.characterOptions.bind(this);
 	}
+
+    componentDidMount(){
+        this.props.handleGrabCharacters();
+    }
 
     characterOptions(){
         let temp = [];
@@ -89,4 +93,5 @@ const mapStateToProps = state => {
 
 export default connect(mapStateToProps, {
 	handleUpdateNewCharacter,
+    handleGrabCharacters,
 })(CharacterInfo);
