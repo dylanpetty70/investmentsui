@@ -57,7 +57,7 @@ class CharacterSheet extends Component {
                         currentHP: 0,
                         tempHP: 0,
                         hitDie: '',
-                        deathSaves: 0,
+                        deathSaves: [false,false,false,false,false,false],
                         customAttacks: {},
                         tempEquip: '',
                         tempEquipCat: '',
@@ -95,6 +95,7 @@ class CharacterSheet extends Component {
         this.deleteSpell = this.deleteSpell.bind(this);
         this.saveCharacter = this.saveCharacter.bind(this);
         this.updateCharacter = this.updateCharacter.bind(this);
+        this.deathSaves = this.deathSaves.bind(this);
 	}
 
     componentDidMount(){
@@ -582,7 +583,7 @@ class CharacterSheet extends Component {
             let key = Object.keys(this.props.dndInfo.generalInfo.specifics[`ability-scores`])[i];
             temp.push(
             <Row key={key + 'savingsThrows'}>
-                <Form.Check style={{bottom: '3px'}} onChange={() => {this.setState({...this.state, savingsThrows: {...this.state.savingsThrows, [key]: (!this.state.savingsThrows[key])}})}}/>
+                <Form.Check checked={this.state.savingsThrows[key]} style={{bottom: '3px'}} onChange={() => {this.setState({...this.state, savingsThrows: {...this.state.savingsThrows, [key]: (!this.state.savingsThrows[key])}})}}/>
                 <Form.Label style={{border: '1px solid', borderColor: 'lightGray', marginLeft: '15px', paddingLeft: '3px', paddingRight: '3px'}}>
                     {(!isNaN(this.state.abilities[key])) ? 
                         ((Number(this.state.abilities[key]) - 10 > 0) ? 
@@ -613,12 +614,28 @@ class CharacterSheet extends Component {
 			}
             temp.push(
             <Row key={key + 'skill'}>
-                <Form.Check style={{bottom: '3px'}} onChange={() => {this.setState({...this.state, skills: {...this.state.skills, [key]: (!this.state.skills[key])}})}}/>
+                <Form.Check checked={this.state.skills[key]} style={{bottom: '3px'}} onChange={() => {this.setState({...this.state, skills: {...this.state.skills, [key]: (!this.state.skills[key])}})}}/>
                 <Form.Label style={{border: '1px solid', borderColor: 'lightGray', marginLeft: '15px', paddingLeft: '3px', paddingRight: '3px'}}>
                     {skill}
                 </Form.Label>
                 <Form.Label style={{paddingLeft: '5px'}}>{key}  {this.information(key, this.props.dndInfo.generalInfo.specifics.skills[key])}</Form.Label>
             </Row>);
+		}
+        return temp;
+	}
+    
+    deathSaves(){
+        let temp = [];
+        let temp1 = this.state.deathSaves;
+        for(let i = 0; i < 3; i++){
+            temp.push(
+                <Form.Check style={{backgroundColor: 'red',  padding: '2px'}} checked={this.state.deathSaves[i]} onChange={() => {temp1[i] = !this.state.deathSaves[i]; this.setState({...this.state, deathSaves: temp1})}}/>
+            )
+		}
+        for(let i = 3; i < 6; i++){
+            temp.push(
+                <Form.Check style={{backgroundColor: 'green', padding: '2px'}} checked={this.state.deathSaves[i]} onChange={() => {temp1[i] = !this.state.deathSaves[i]; this.setState({...this.state, deathSaves: temp1})}}/>
+            )
 		}
         return temp;
 	}
@@ -1105,7 +1122,9 @@ class CharacterSheet extends Component {
                                     <Col>
                                         <Form.Group>
                                         <Form.Label>Death Saves</Form.Label>
-                                          <Form.Control value={this.state.deathSaves} onChange={(text) =>{this.setState({...this.state, deathSaves: text.target.value})}}/>
+                                          <Form inline="true">
+                                            {this.deathSaves()}
+                                          </Form>
                                         </Form.Group>
                                     </Col>
                                 </Row>
