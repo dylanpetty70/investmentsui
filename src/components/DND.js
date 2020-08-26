@@ -32,9 +32,9 @@ class DND extends Component {
 	}
 
 	redirectNonuser(){
-		//if(!this.props.dndInfo.status){
-		//	return <Redirect to="/404" />
-		//}
+		if(!this.props.dndInfo.status){
+			return <Redirect to="/404" />
+		}
 	}
 
 	//description of next session

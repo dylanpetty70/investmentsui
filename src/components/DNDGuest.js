@@ -4,6 +4,7 @@ import Nav from 'react-bootstrap/Nav';
 import CharacterInfo from './DND/characterInfo';
 import Roller from './DND/roller';
 import {handleUpdate5e, handleGrab5e} from '../actions/5eInfo';
+import CreateEnv from './DND/createEnv';
 
 class DNDGuest extends Component {
 
@@ -28,6 +29,9 @@ class DNDGuest extends Component {
 			<Nav.Item>
 			<Nav.Link eventKey="home">Dashboard</Nav.Link>
 			</Nav.Item>
+			<Nav.Item>
+			<Nav.Link eventKey="createenvironment">Create Environment</Nav.Link>
+			</Nav.Item>
 		</Nav>
 		);
 	}
@@ -36,6 +40,8 @@ class DNDGuest extends Component {
 		switch(this.state.page){
 			case 'home':
 				return (<CharacterInfo />);
+			case 'createenvironment':
+				return (<CreateEnv />);
 			default:
 				return (<></>);
 		}

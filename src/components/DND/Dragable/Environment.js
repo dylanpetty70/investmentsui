@@ -11,7 +11,8 @@ import GridLayer from './GridLayer';
 //create backgrounds
 //get images for background elements
 //create ability to create and save environments
-
+//put this in the dnd-guest area
+//
 
 class Environment extends Component {
 
