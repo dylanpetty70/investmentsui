@@ -14,6 +14,9 @@ import { PersistGate } from 'redux-persist/integration/react';
 import rootReducer from './reducers';
 import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
 
+import {DndProvider} from 'react-dnd';
+import {HTML5Backend} from 'react-dnd-html5-backend';
+
 const persistConfig = {
   key: 'ruse',
   storage,
@@ -28,7 +31,9 @@ const persistor = persistStore(store);
 ReactDOM.render(
     <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>
+    <DndProvider backend={HTML5Backend}>
     <App />
+    </DndProvider>
     </PersistGate>
     </Provider>,
   document.getElementById('root')

@@ -298,3 +298,92 @@ export async function update5eDetails(dndInfo){
     return result1.data;
 }
 
+export async function grabDraggable(environment){
+	let result = await api('https://dylan-s-database.firebaseio.com/dnd/environments.json', {
+		headers: {
+			"Content-type": "application/json; charset=UTF-8",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "POST, GET, OPTIONS, DELETE, PUT",
+            "Access-Control-Allow-Headers": "append,delete,entries,foreach,get,has,keys,set,values,Authorization"
+		}})
+	let temp = {};
+	temp['items'] = result.data.items;
+	temp['current'] = (result.data.options[environment].items) ? result.data.options[environment].items : [];
+	temp['scale'] = Number(result.data.options[environment].scale);
+    return temp;
+}
+
+export async function updateCurrent(environment, current){
+	await api.put('https://dylan-s-database.firebaseio.com/dnd/environments/options/' + environment + '/items.json',
+	current
+	)
+
+	return grabDraggable(environment);
+}
+
+export async function addItem(item, component){
+	
+	let result = await api('https://dylan-s-database.firebaseio.com/dnd/environments.json', {
+			headers: {
+				"Content-type": "application/json; charset=UTF-8",
+				"Access-Control-Allow-Origin": "*",
+				"Access-Control-Allow-Methods": "POST, GET, OPTIONS, DELETE, PUT",
+				"Access-Control-Allow-Headers": "append,delete,entries,foreach,get,has,keys,set,values,Authorization"
+			}})
+	let temp = result.data.items;
+	temp[item] = component;
+	await api.put('https://dylan-s-database.firebaseio.com/dnd/environments/items.json',
+		temp
+		)
+	return temp;
+}
+
+export async function newEnvironment(name){
+	
+	let result = await api('https://dylan-s-database.firebaseio.com/dnd/environments.json', {
+			headers: {
+				"Content-type": "application/json; charset=UTF-8",
+				"Access-Control-Allow-Origin": "*",
+				"Access-Control-Allow-Methods": "POST, GET, OPTIONS, DELETE, PUT",
+				"Access-Control-Allow-Headers": "append,delete,entries,foreach,get,has,keys,set,values,Authorization"
+			}})
+	let temp = result.data;
+	temp.options[name] = { name: name, items: []};
+	await api.put('https://dylan-s-database.firebaseio.com/dnd/environments.json',
+		temp
+		)
+	return grabDraggable(name);
+}
+
+export async function grabOptions(){
+	
+	let result = await api('https://dylan-s-database.firebaseio.com/dnd/environments/options.json', {
+			headers: {
+				"Content-type": "application/json; charset=UTF-8",
+				"Access-Control-Allow-Origin": "*",
+				"Access-Control-Allow-Methods": "POST, GET, OPTIONS, DELETE, PUT",
+				"Access-Control-Allow-Headers": "append,delete,entries,foreach,get,has,keys,set,values,Authorization"
+			}})
+	let temp = [];
+	for(var key in result.data){
+		temp.push(key);
+	}	
+	return temp;
+}
+
+export async function changeScale(scale, environment){
+	
+	let result = await api('https://dylan-s-database.firebaseio.com/dnd/environments/options/'+environment+'.json', {
+			headers: {
+				"Content-type": "application/json; charset=UTF-8",
+				"Access-Control-Allow-Origin": "*",
+				"Access-Control-Allow-Methods": "POST, GET, OPTIONS, DELETE, PUT",
+				"Access-Control-Allow-Headers": "append,delete,entries,foreach,get,has,keys,set,values,Authorization"
+			}})
+	let temp = result.data;
+	temp.scale = scale;
+	await api.put('https://dylan-s-database.firebaseio.com/dnd/environments/options/'+environment+'.json',
+		temp
+		)
+	return temp;
+}

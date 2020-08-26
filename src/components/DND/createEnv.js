@@ -1,15 +1,14 @@
 import React, {Component} from 'react';
+import Environment from './Dragable/Environment';
 
 class CreateEnv extends Component {
 
 	render(){
 		return(
             <div>
-				{console.log('CreateEnv')}
+				<Environment/>
             </div>
 		)
 	}
 }
-
-
 export default CreateEnv;

@@ -11,6 +11,8 @@ import user from './user';
 import userStatus from './userStatus';
 import multipleStocks from './multipleStocks';
 import dndInfo from './dndInfo';
+import draggable from './draggable';
+import envOptions from './envOptions';
 
 export default combineReducers({
 	govBondRate,
@@ -24,4 +26,6 @@ export default combineReducers({
 	userStatus,
 	multipleStocks,
 	dndInfo,
+	draggable,
+	envOptions
 })

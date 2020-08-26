@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import Nav from 'react-bootstrap/Nav';
+import ToggleButton from 'react-bootstrap/ToggleButton'
 import CampaignDetails from './DND/campaignDetails';
 import CharacterInfo from './DND/characterInfo';
 import CreateEnv from './DND/createEnv';
@@ -9,12 +10,14 @@ import Monsters from './DND/monsters';
 import Home from './DND/home';
 import Roller from './DND/roller';
 import {handleUpdate5e, handleGrab5e} from '../actions/5eInfo';
+import {handleGrabDraggable, handleNewEnvironment} from '../actions/draggable';
+import ButtonGroup from 'react-bootstrap/ButtonGroup'
 
 class DND extends Component {
 
 	constructor(props){
 		super(props);
-        this.state = {page: 'home'};
+        this.state = {page: 'home', showDice: false};
 		this.redirectNonuser = this.redirectNonuser.bind(this);
 		this.navTabs = this.navTabs.bind(this);
 		this.switchStatement = this.switchStatement.bind(this);
@@ -24,15 +27,16 @@ class DND extends Component {
 		if(!this.props.dndInfo.generalInfo){
 			this.props.handleGrab5e();
 		}
+		
+		this.props.handleGrabDraggable('first');
 	}
 
 	redirectNonuser(){
-		if(!this.props.dndInfo.status){
-			return <Redirect to="/404" />
-		}
+		//if(!this.props.dndInfo.status){
+		//	return <Redirect to="/404" />
+		//}
 	}
 
-	//roller
 	//description of next session
 	//general overview of world
 	//Monsters in next session vs. monsters used
@@ -63,6 +67,18 @@ class DND extends Component {
 			<Nav.Item>
 			<Nav.Link eventKey="characterinfo">Character Info</Nav.Link>
 			</Nav.Item>
+			<ButtonGroup toggle className="mb-2">
+				<ToggleButton
+				  type="checkbox"
+				  variant="outline-secondary"
+				  checked={this.state.showDice}
+				  value='1'
+				  style={{marginLeft: '20px'}}
+				  onChange={() => this.setState({...this.state, showDice: !this.state.showDice})}
+				>
+				  Toggle Dice Roller
+				</ToggleButton>
+			</ButtonGroup>
 		</Nav>
 		);
 	}
@@ -92,8 +108,8 @@ class DND extends Component {
 			<div style={{minWidth: '75%', float: 'left'}}>
 			{this.switchStatement()}
 			</div>
-			<div style={{right: '0', position: 'absolute', margin: '20px', maxWidth: '300px'}}>
-			<Roller />
+			<div style={{right: '0', position: 'absolute', margin: '10px', maxWidth: '300px'}}>
+			{(this.state.showDice) ? <Roller /> : <></>}
 			</div>
 			</div>
 		)
@@ -109,4 +125,6 @@ const mapStateToProps = state => {
 export default connect(mapStateToProps, {
 	handleUpdate5e,
 	handleGrab5e,
+	handleGrabDraggable,
+	handleNewEnvironment
 })(DND);

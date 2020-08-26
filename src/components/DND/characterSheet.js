@@ -13,11 +13,21 @@ import {MdDelete} from 'react-icons/md';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import {handleSaveCharacter} from '../../actions/characters';
 import equal from 'fast-deep-equal'
+import BaseInformation from './Information';
 
 //delete character
-//info scrollable
-//subclass variable
-//customize info for spells
+
+function Information(props) {
+    let temp = BaseInformation(props.name, props.info);
+    return (<OverlayTrigger trigger="click" placement="right" overlay={
+            <Popover id="popover-info">
+            <Popover.Title as="h3">{props.name}</Popover.Title>
+            <Popover.Content style={{maxHeight: '80vh', overflow: 'auto'}}>{temp}</Popover.Content>
+            </Popover>
+            }>
+        <FcInfo />
+    </OverlayTrigger>)
+}
 
 class CharacterSheet extends Component {
 
@@ -84,7 +94,6 @@ class CharacterSheet extends Component {
         this.skills = this.skills.bind(this);
         this.addProficiencies = this.addProficiencies.bind(this);
         this.addLanguages = this.addLanguages.bind(this);
-        this.information = this.information.bind(this);
         this.delete = this.delete.bind(this);
         this.addAttack = this.addAttack.bind(this);
         this.addEquip = this.addEquip.bind(this);
@@ -251,253 +260,6 @@ class CharacterSheet extends Component {
 
 	}
 
-    information(name, info){
-        let temp = [];
-        if(typeof info === "object"){
-        temp.push(Object.keys(info).map((key) => {
-            let temp1 = [];
-            if(key !== '_id' && key !== 'school' && key !== 'references' && key !== 'full_name' && key !== 'subclass_levels' && key !== 'equipment_category' && key !== 'index' && key !== 'name' && key !== 'url' && key !== 'weapon_category' && key !== 'class_levels' && key !== 'spellcasting' && key !== 'starting_equipment'){
-                if(key === 'desc'){
-                    temp1.push(<div key={key}><strong>Description</strong><br/></div>);
-                    if(Array.isArray(info[key])){
-                        for(let i = 0; i < info[key].length; i++){
-                            temp1.push(
-                                <p key={key+'1'}>{info[key][i].toString()}<br/></p>
-					        )
-					    }
-					} else {
-                        temp1.push(
-                                <p key={key+'1'}>{info[key].toString()}<br/></p>
-					        )
-					}
-                } else if(key === 'hit_die'){
-                    temp1.push(<div key={key}><strong>Hit Die</strong><br/></div>);
-                    temp1.push(
-                        <p key={key+'1'}>{'d' + info[key].toString()}<br/></p>
-					)
-                } else if(key === 'proficiencies'){
-                    temp1.push(<div key={key}><strong>Proficiencies</strong><br/></div>);
-                    let temp2 = '';
-                    for(let i = 0; i < info[key].length; i++){
-                        temp2 += info[key][i].name.toString() + ', ';
-					}
-                    temp1.push(<p key={key+'1'}>{temp2}</p>);
-                } else if(key === 'proficiency_choices'){
-                    temp1.push(<div key={key}><strong>Proficiency Choices</strong><br/></div>);
-                    temp1.push(<em>{'Choose ' + info[key][0].choose}</em>)
-                    let temp2 = '';
-                    for(let i = 0; i < info[key][0].from.length; i++){
-                        temp2 += info[key][0].from[i].name.toString().replace('Skill: ','') + ', ';
-					}
-                    temp1.push(<p key={key+'1'}>{temp2}</p>);
-                } else if(key === 'saving_throws'){
-                    temp1.push(<div key={key}><strong>Saving Throw Proficiencies</strong><br/></div>);
-                    let temp2 = '';
-                    for(let i = 0; i < info[key].length; i++){
-                        temp2 += info[key][i].name.toString() + ', ';
-					}
-                    temp1.push(<p key={key+'1'}>{temp2}</p>);
-                } else if(key === 'subclasses'){
-                    temp1.push(<div key={key}><strong>Subclasses</strong><br/></div>);
-                    let temp2 = '';
-                    for(let i = 0; i < info[key].length; i++){
-                        temp2 += info[key][i].name.toString() + ', ';
-					}
-                    temp1.push(<p key={key+'1'}>{temp2}</p>);
-                } else if(key === 'ability_bonuses'){
-                    temp1.push(<div key={key}><strong>Ability Bonuses</strong><br/></div>);
-                    let temp2 = '';
-                    for(let i = 0; i < info[key].length; i++){
-                        temp2 = info[key][i].name.toString() + ': +' + info[key][i].bonus.toString();
-                        temp1.push(<p key={key+'1'}>{temp2}</p>);
-					}
-                } else if(key === 'ability_bonus_options'){
-                    temp1.push(<div key={key}><strong>Ability Bonus Options</strong><br/></div>);
-                    temp1.push(<em>{'Choose ' + info[key].choose}</em>)
-                    let temp2 = '';
-                    for(let i = 0; i < info[key].from.length; i++){
-                        temp2 += info[key].from[i].name.toString() + ': +' + info[key].from[i].bonus.toString() + ', ';
-					}
-                    temp1.push(<p key={key+'1'}>{temp2}</p>);
-                } else if(key === 'language_options'){
-                    temp1.push(<div key={key}><strong>Language Options</strong><br/></div>);
-                    temp1.push(<em>{'Choose ' + info[key].choose}</em>)
-                    let temp2 = '';
-                    for(let i = 0; i < info[key].from.length; i++){
-                        temp2 += info[key].from[i].name.toString() + ', ';
-					}
-                    temp1.push(<p key={key+'1'}>{temp2}</p>);
-                } else if(key === 'languages'){
-                    temp1.push(<div key={key}><strong>Languages</strong><br/></div>);
-                    let temp2 = '';
-                    for(let i = 0; i < info[key].length; i++){
-                        temp2 += info[key][i].name.toString() + ', ';
-					}
-                    temp1.push(<p key={key+'1'}>{temp2}</p>);
-                } else if(key === 'traits'){
-                    temp1.push(<div key={key}><strong>Traits</strong><br/></div>);
-                    let temp2 = '';
-                    for(let i = 0; i < info[key].length; i++){
-                        temp2 += info[key][i].name.toString() + ', ';
-					}
-                    temp1.push(<p key={key+'1'}>{temp2}</p>);
-                } else if(key === 'starting_proficiencies'){
-                    temp1.push(<div key={key}><strong>Starting Proficiencies</strong><br/></div>);
-                    let temp2 = '';
-                    for(let i = 0; i < info[key].length; i++){
-                        temp2 += info[key][i].name.toString() + ', ';
-					}
-                    temp1.push(<p key={key+'1'}>{temp2}</p>);
-                } else if(key === 'starting_proficiency_options'){
-                    temp1.push(<div key={key}><strong>Starting Proficiency Options</strong><br/></div>);
-                    temp1.push(<em>{'Choose ' + info[key].choose}</em>)
-                    let temp2 = '';
-                    for(let i = 0; i < info[key].from.length; i++){
-                        temp2 += info[key].from[i].name.toString() + ', ';
-					}
-                    temp1.push(<p key={key+'1'}>{temp2}</p>);
-                } else if(key === 'subraces'){
-                    temp1.push(<div key={key}><strong>Subraces</strong><br/></div>);
-                    let temp2 = '';
-                    for(let i = 0; i < info[key].length; i++){
-                        temp2 += info[key][i].name.toString() + ', ';
-					}
-                    temp1.push(<p key={key+'1'}>{temp2}</p>);
-                } else if(key === 'class'){
-                    temp1.push(<div key={key}><strong>Class</strong><br/></div>);
-                    temp1.push(<p>{info[key].name}</p>)
-                } else if(key === 'skills'){
-                    temp1.push(<div key={key}><strong>Skills</strong><br/></div>);
-                    let temp2 = '';
-                    for(let i = 0; i < info[key].length; i++){
-                        temp2 += info[key][i].name.toString() + ', ';
-					}
-                    temp1.push(<p key={key+'1'}>{temp2}</p>);
-                } else if(key === 'ability_score'){
-                    temp1.push(<div key={key}><strong>Ability Score</strong><br/></div>);
-                    temp1.push(<p>{info[key].name}</p>)
-                } else if(key === 'races'){
-                    temp1.push(<div key={key}><strong>Races</strong><br/></div>);
-                    let temp2 = '';
-                    for(let i = 0; i < info[key].length; i++){
-                        temp2 += info[key][i].name.toString() + ', ';
-					}
-                    temp1.push(<p key={key+'1'}>{temp2}</p>);
-                } else if(key === 'classes'){
-                    temp1.push(<div key={key}><strong>Classes</strong><br/></div>);
-                    let temp2 = '';
-                    for(let i = 0; i < info[key].length; i++){
-                        temp2 += info[key][i].name.toString() + ', ';
-					}
-                    temp1.push(<p key={key+'1'}>{temp2}</p>);
-                } else if(key === 'typical_speakers'){
-                    temp1.push(<div key={key}><strong>Typical Speakers</strong><br/></div>);
-                    let temp2 = '';
-                    for(let i = 0; i < info[key].length; i++){
-                        temp2 += info[key][i].toString() + ', ';
-					}
-                    temp1.push(<p key={key+'1'}>{temp2}</p>);
-                } else if(key === 'contents'){
-                    temp1.push(<div key={key}><strong>Contents</strong><br/></div>);
-                    let temp2 = '';
-                    for(let i = 0; i < info[key].length; i++){
-                        temp2 += '1 ' + info[key][i].item_url.toString().replace('/api/equipment/','').split("-").join(" ") + ', ';
-					}
-                    temp1.push(<p key={key+'1'}>{temp2}</p>);
-                } else if(key === 'properties'){
-                    temp1.push(<div key={key}><strong>Properties</strong><br/></div>);
-                    let temp2 = '';
-                    for(let i = 0; i < info[key].length; i++){
-                        temp2 += info[key][i].name + ', ';
-					}
-                    temp1.push(<p key={key+'1'}>{temp2}</p>);
-                } else if(key === 'range'){
-                    temp1.push(<div key={key}><strong>Range</strong><br/></div>);
-                    if(Array.isArray(info[key])){
-                        for(let i = 0; i < info[key].length; i++){
-                            temp1.push(
-                                <p key={key+'1'}>{info[key][i].toString()}<br/></p>
-					        )
-					    }
-					} else {
-                        temp1.push(
-                                <p key={key+'1'}>{info[key].toString()}<br/></p>
-					        )
-					}
-                } else if(key === 'throw_range'){
-                    temp1.push(<div key={key}><strong>Throw Range</strong><br/></div>);
-                    let temp2 = '';
-                    for(var key1 in info[key]){
-                        temp2 += key1 + ': ' + info[key][key1] + ', ';
-					}
-                    temp1.push(<p key={key+'1'}>{temp2}</p>);
-                } else if(key === 'higher_level'){
-                    temp1.push(<div key={key}><strong>Higher Level</strong><br/></div>);
-                    temp1.push(<p key={key+'1'}>{info[key][0]}</p>);
-                } else if(key === 'area_of_effect'){
-                    temp1.push(<div key={key}><strong>Area of Effect</strong><br/></div>);
-                    temp1.push(<p key={key+'1'}>Size: {info[key].size}<br/>Type: {info[key].type}</p>);
-                } else if(key === 'dc'){
-                    temp1.push(<div key={key}><strong>DC Save</strong><br/></div>);
-                    temp1.push(<p key={key+'1'}>On Success: {info[key].dc_success}<br/>DC Type: {info[key].dc_type.name}</p>);
-                } else if(key === 'components'){
-                    temp1.push(<div key={key}><strong>Components</strong><br/></div>);
-                    let temp2 = '';
-                    for(let i = 0; i < info[key].length; i++){
-                        temp2 += info[key][i] + ', ';
-					}
-                    temp1.push(<p key={key+'1'}>{temp2}</p>);
-                } else if(key === 'damage'){
-                    temp1.push(<div key={key}><strong>Damage</strong><br/></div>);
-                    temp1.push(<p key={key+'1'}>
-                        {'Damage Dice: ' + info[key].damage_dice}<br/>
-                        {'Damage Type: ' + info[key].damage_type.name}
-                        </p>);
-                    if(info[key].damage_at_slot_level){
-                        temp1.push(<em>Damage At Slot Level</em>);
-                        let temp2 = '';
-                        for(let i = 0; i < info[key].damage_at_slot_level.length; i++){
-                            temp2 += 'Level ' + i + ': ' + info[key].damage_at_slot_level[i] + ', ';
-					    }
-                        temp1.push(<p key={key+'1'}>{temp2}</p>);
-					}
-                } else if(key === 'armor_class'){
-                    temp1.push(<div key={key}><strong>Armor Class</strong><br/></div>);
-                    temp1.push(<p key={key+'1'}>{'Base: ' + info[key].base}<br/>{'DexBonus: ' + info[key].dex_bonus}</p>);
-                } else if(key === 'cost'){
-                    temp1.push(<div key={key}><strong>Cost</strong><br/></div>);
-                    temp1.push(<p key={key+'1'}>{'Unit: ' + info[key].unit}<br/>{'Quantity: ' + info[key].quantity}</p>);
-                } else if(typeof info[key] === "object"){
-                    temp1.push(<div key={key}><strong>{key}</strong><br/></div>);
-                    temp1.push(<p key={key+'1'}>{JSON.stringify(info[key])}</p>);
-			    } else if(typeof info[key] === "undefined"){
-                    temp1.push(<div key={key}><strong>{key}</strong><br/></div>);
-                    temp1.push(<p key={key+'1'}>Not Available</p>)
-			    } else{
-                    temp1.push(<div key={key}><strong>{key}</strong><br/></div>);
-                    temp1.push(<p key={key+'1'}>{info[key].toString()}</p>);     
-			    }
-            } else {
-                temp1.push(<></>);     
-			}
-            return temp1;
-		}))
-        }
-        
-        return (<OverlayTrigger trigger="click" placement="right" overlay={
-                <Popover id="popover-info">
-                <Popover.Title as="h3">{name}</Popover.Title>
-                <Popover.Content>
-                <div style={{maxHeight: '80vh', overflow: 'auto'}}>
-                    {temp}
-                </div>
-                </Popover.Content>
-                </Popover>
-                }>
-            <FcInfo />
-        </OverlayTrigger>)
-	}
-
     delete(keyInState, i){
         return (<MdDelete  onClick={() => {let temp = this.state[keyInState]; temp.splice(i,1); this.setState({...this.state, [keyInState]: temp})}}/>);
 	}
@@ -556,7 +318,7 @@ class CharacterSheet extends Component {
             temp.push(<Card border="dark" key={key + 'abilities'} style={{textAlign: 'center', maxWidth: '100px', fontSize: '12px', marginBottom: '5px'}}>
                 <Card.Header style={{padding: '0px'}}>
                 {this.props.dndInfo.generalInfo.specifics[`ability-scores`][key].full_name}
-                 {this.information(key, this.props.dndInfo.generalInfo.specifics[`ability-scores`][key])}
+                 <Information key={key+i} name={key} info={this.props.dndInfo.generalInfo.specifics[`ability-scores`][key]}/>
                 </Card.Header>
                 <Card.Body style={{padding: '5px'}}>
                     <Card.Title>
@@ -614,11 +376,11 @@ class CharacterSheet extends Component {
 			}
             temp.push(
             <Row key={key + 'skill'}>
-                <Form.Check checked={this.state.skills[key]} style={{bottom: '3px'}} onChange={() => {this.setState({...this.state, skills: {...this.state.skills, [key]: (!this.state.skills[key])}})}}/>
+                <Form.Check checked={!!this.state.skills[key]} style={{bottom: '3px'}} onChange={() => {this.setState({...this.state, skills: {...this.state.skills, [key]: (!this.state.skills[key])}})}}/>
                 <Form.Label style={{border: '1px solid', borderColor: 'lightGray', marginLeft: '15px', paddingLeft: '3px', paddingRight: '3px'}}>
                     {skill}
                 </Form.Label>
-                <Form.Label style={{paddingLeft: '5px'}}>{key}  {this.information(key, this.props.dndInfo.generalInfo.specifics.skills[key])}</Form.Label>
+                <Form.Label style={{paddingLeft: '5px'}}>{key}  <Information key={key+i} name={key} info={this.props.dndInfo.generalInfo.specifics.skills[key]}/></Form.Label>
             </Row>);
 		}
         return temp;
@@ -629,12 +391,12 @@ class CharacterSheet extends Component {
         let temp1 = this.state.deathSaves;
         for(let i = 0; i < 3; i++){
             temp.push(
-                <Form.Check style={{backgroundColor: 'red',  padding: '2px'}} checked={this.state.deathSaves[i]} onChange={() => {temp1[i] = !this.state.deathSaves[i]; this.setState({...this.state, deathSaves: temp1})}}/>
+                <Form.Check key={Math.random(100000)} style={{backgroundColor: 'red',  padding: '2px'}} checked={!!this.state.deathSaves[i]} onChange={() => {temp1[i] = !this.state.deathSaves[i]; this.setState({...this.state, deathSaves: temp1})}}/>
             )
 		}
         for(let i = 3; i < 6; i++){
             temp.push(
-                <Form.Check style={{backgroundColor: 'green', padding: '2px'}} checked={this.state.deathSaves[i]} onChange={() => {temp1[i] = !this.state.deathSaves[i]; this.setState({...this.state, deathSaves: temp1})}}/>
+                <Form.Check key={Math.random(100000)} style={{backgroundColor: 'green', padding: '2px'}} checked={!!this.state.deathSaves[i]} onChange={() => {temp1[i] = !this.state.deathSaves[i]; this.setState({...this.state, deathSaves: temp1})}}/>
             )
 		}
         return temp;
@@ -951,7 +713,7 @@ class CharacterSheet extends Component {
                             <Row>
                                 <Col sm={4}>
                                     <Form.Group>
-                                    <Form.Label>Class {this.information(this.state.class, this.props.dndInfo.generalInfo.specifics.classes[this.state.class])}</Form.Label>
+                                    <Form.Label>Class <Information key={this.state.class} name={this.state.class} info={this.props.dndInfo.generalInfo.specifics.classes[this.state.class]}/></Form.Label>
                                       <Form.Control as="select" custom value={this.state.class} onChange={(text) =>{this.setState({...this.state, class: text.target.value})}}>
                                         {this.classOptions()}
                                       </Form.Control>
@@ -973,7 +735,7 @@ class CharacterSheet extends Component {
                             <Row>
                                 <Col sm={4}>
                                     <Form.Group>
-                                    <Form.Label>Race {this.information(this.state.race, this.props.dndInfo.generalInfo.specifics.races[this.state.race])}</Form.Label>
+                                    <Form.Label>Race <Information key={this.state.race} name={this.state.race} info={this.props.dndInfo.generalInfo.specifics.races[this.state.race]}/></Form.Label>
                                       <Form.Control as="select" custom value={this.state.race} onChange={(text) =>{this.setState({...this.state, race: text.target.value})}}>
                                         {this.raceOptions()}
                                       </Form.Control>
@@ -981,7 +743,7 @@ class CharacterSheet extends Component {
                                 </Col>
                                 <Col sm={4}>
                                     <Form.Group>
-                                    <Form.Label>Subclass {(this.state.subclass !== '' && this.state.subclass !== 'Select One') ? this.information(this.state.subclass, this.props.dndInfo.generalInfo.specifics.subclasses[this.state.subclass]): <></>}</Form.Label>
+                                    <Form.Label>Subclass {(this.state.subclass !== '' && this.state.subclass !== 'Select One') ? <Information key={this.state.subclass} name={this.state.subclass} info={this.props.dndInfo.generalInfo.specifics.subclasses[this.state.subclass]}/>: <></>}</Form.Label>
                                       <Form.Control as="select" custom value={this.state.subclass} onChange={(text) =>{this.setState({...this.state, subclass: text.target.value})}}>
                                         {this.subclassOptions()}
                                       </Form.Control>
@@ -1058,7 +820,7 @@ class CharacterSheet extends Component {
                                     </Card.Header>
                                     <Card.Body style={{marginBottom: '0', fontSize: '14px', padding: '1px', margin: '0'}}>
                                         {this.state.proficiencies.map((p, idx) => (<h6 key={idx}>{p} 
-                                            {this.information(p, this.props.dndInfo.generalInfo.specifics.proficiencies[p])} {this.delete('proficiencies', idx)}
+                                            <Information key={p} name={p} info={this.props.dndInfo.generalInfo.specifics.proficiencies[p]}/> {this.delete('proficiencies', idx)}
                                             </h6>
                                             ))}
                                     </Card.Body>
@@ -1070,7 +832,7 @@ class CharacterSheet extends Component {
                                         Languages <Button style={{float: 'right'}} variant='outline-success' onClick={() => {this.setState({...this.state, showLang: true})}}>Add</Button>
                                     </Card.Header>
                                     <Card.Body style={{marginBottom: '0', fontSize: '14px', padding: '1px', margin: '0'}}>
-                                        {this.state.languages.map((l, idx) => (<h6 key={idx}>{l} {this.information(l, this.props.dndInfo.generalInfo.specifics.languages[l])}  {this.delete('languages', idx)}</h6>))}
+                                        {this.state.languages.map((l, idx) => (<h6 key={idx}>{l} <Information key={l} name={l} info={this.props.dndInfo.generalInfo.specifics.languages[l]}/>  {this.delete('languages', idx)}</h6>))}
                                     </Card.Body>
                                 </Card>
                             </Row>
@@ -1146,7 +908,7 @@ class CharacterSheet extends Component {
                                         Equipment <Button style={{float: 'right'}} variant='outline-success' onClick={() => {this.setState({...this.state, showEquip: true})}}>Add</Button>
                                     </Card.Header>
                                     <Card.Body style={{marginBottom: '0', fontSize: '14px', padding: '1px', margin: '0'}}>
-                                        {this.state.equipment.map((e, idx) => (<h6 key={idx}>{e} {this.information(e, this.props.dndInfo.generalInfo.specifics.equipment[e])}  {this.delete('equipment', idx)} </h6>))}
+                                        {this.state.equipment.map((e, idx) => (<h6 key={idx}>{e} <Information key={e} name={e} info={this.props.dndInfo.generalInfo.specifics.equipment[e]}/>  {this.delete('equipment', idx)} </h6>))}
                                     </Card.Body>
                                 </Card>
                             </Row>
@@ -1182,7 +944,7 @@ class CharacterSheet extends Component {
                                             Features <Button style={{float: 'right'}} variant='outline-success' onClick={() => {this.setState({...this.state, showFeat: true})}}>Add</Button>
                                         </Card.Header>
                                         <Card.Body style={{marginBottom: '0', fontSize: '14px', padding: '1px', margin: '0'}}>
-                                            {this.state.features.map((f, idx) => (<h6 key={idx}>{f} {this.information(f, this.props.dndInfo.generalInfo.specifics.features[f])}  {this.delete('features', idx)} </h6>))}
+                                            {this.state.features.map((f, idx) => (<h6 key={idx}>{f} <Information key={f} name={f} info={this.props.dndInfo.generalInfo.specifics.features[f]}/>  {this.delete('features', idx)} </h6>))}
                                         </Card.Body>
                                     </Card>
                                 </Row>
@@ -1192,7 +954,7 @@ class CharacterSheet extends Component {
                                             Traits <Button style={{float: 'right'}} variant='outline-success' onClick={() => {this.setState({...this.state, showTrait: true})}}>Add</Button>
                                         </Card.Header>
                                         <Card.Body style={{marginBottom: '0', fontSize: '14px', padding: '1px', margin: '0'}}>
-                                            {this.state.traits.map((t, idx) => (<h6 key={idx}>{t} {this.information(t, this.props.dndInfo.generalInfo.specifics.traits[t])}  {this.delete('traits', idx)} </h6>))}
+                                            {this.state.traits.map((t, idx) => (<h6 key={idx}>{t} <Information key={t} name={t} info={this.props.dndInfo.generalInfo.specifics.traits[t]}/>  {this.delete('traits', idx)} </h6>))}
                                         </Card.Body>
                                     </Card>
                                 </Row>
@@ -1213,7 +975,7 @@ class CharacterSheet extends Component {
                             <Col sm={5} style={{borderRightStyle: 'solid', borderWidth: '1px', borderColor: 'lightGray'}}>
                                 <Row style={{marginLeft: '10px'}}>
                                     <Form.Group>
-                                    <Form.Label>Spellcasting Class {this.information(this.state.spellClass, this.props.dndInfo.generalInfo.specifics.spellcasting[this.state.spellClass.toLowerCase()].info)}</Form.Label>
+                                    <Form.Label>Spellcasting Class <Information key={this.state.spellClass} name={this.state.spellClass} info={this.props.dndInfo.generalInfo.specifics.spellcasting[this.state.spellClass.toLowerCase()].info}/></Form.Label>
                                         <Form.Control as="select" custom onChange={(text) =>{this.setState({...this.state, spellClass: text.target.value})}}>
                                         {this.spellClassOptions()}
                                         </Form.Control>
@@ -1250,7 +1012,7 @@ class CharacterSheet extends Component {
                                         Cantrips <Button style={{float: 'right'}} variant='outline-success' onClick={() => {this.setState({...this.state, showSpell: [true, 0]})}}>Add</Button>
                                     </Card.Header>
                                     <Card.Body style={{marginBottom: '0', fontSize: '14px', padding: '1px', margin: '0'}}>
-                                        {this.state.spells[0].map((f, idx) => (<h6 key={idx}>{f} {this.information(f, this.props.dndInfo.generalInfo.specifics.spells[f])}  {this.deleteSpell(0, idx)} </h6>))}
+                                        {this.state.spells[0].map((f, idx) => (<h6 key={idx}>{f} <Information name={f} info={this.props.dndInfo.generalInfo.specifics.spells[f]}/>  {this.deleteSpell(0, idx)} </h6>))}
                                     </Card.Body>
                                 </Card>
                                 <Card border="dark" style={{textAlign: 'center', fontSize: '16px', marginBottom: '5px', width: '100%', margin: '20px'}}>
@@ -1258,7 +1020,7 @@ class CharacterSheet extends Component {
                                         First Level Spells <Button style={{float: 'right'}} variant='outline-success' onClick={() => {this.setState({...this.state, showSpell: [true, 1]})}}>Add</Button>
                                     </Card.Header>
                                     <Card.Body style={{marginBottom: '0', fontSize: '14px', padding: '1px', margin: '0'}}>
-                                        {this.state.spells[1].map((f, idx) => (<h6 key={idx}>{f} {this.information(f, this.props.dndInfo.generalInfo.specifics.spells[f])}  {this.deleteSpell(1, idx)} </h6>))}
+                                        {this.state.spells[1].map((f, idx) => (<h6 key={idx}>{f} <Information name={f} info={this.props.dndInfo.generalInfo.specifics.spells[f]}/>  {this.deleteSpell(1, idx)} </h6>))}
                                     </Card.Body>
                                 </Card>
                                 <Card border="dark" style={{textAlign: 'center', fontSize: '16px', marginBottom: '5px', width: '100%', margin: '20px'}}>
@@ -1266,7 +1028,7 @@ class CharacterSheet extends Component {
                                         Second Level Spells <Button style={{float: 'right'}} variant='outline-success' onClick={() => {this.setState({...this.state, showSpell: [true, 2]})}}>Add</Button>
                                     </Card.Header>
                                     <Card.Body style={{marginBottom: '0', fontSize: '14px', padding: '1px', margin: '0'}}>
-                                        {this.state.spells[2].map((f, idx) => (<h6 key={idx}>{f} {this.information(f, this.props.dndInfo.generalInfo.specifics.spells[f])}  {this.deleteSpell(2, idx)} </h6>))}
+                                        {this.state.spells[2].map((f, idx) => (<h6 key={idx}>{f} <Information name={f} info={this.props.dndInfo.generalInfo.specifics.spells[f]}/>  {this.deleteSpell(2, idx)} </h6>))}
                                     </Card.Body>
                                 </Card>
                             </Col>
@@ -1276,7 +1038,7 @@ class CharacterSheet extends Component {
                                         Third Level Spells <Button style={{float: 'right'}} variant='outline-success' onClick={() => {this.setState({...this.state, showSpell: [true, 3]})}}>Add</Button>
                                     </Card.Header>
                                     <Card.Body style={{marginBottom: '0', fontSize: '14px', padding: '1px', margin: '0'}}>
-                                        {this.state.spells[3].map((f, idx) => (<h6 key={idx}>{f} {this.information(f, this.props.dndInfo.generalInfo.specifics.spells[f])}  {this.deleteSpell(3, idx)} </h6>))}
+                                        {this.state.spells[3].map((f, idx) => (<h6 key={idx}>{f} <Information name={f} info={this.props.dndInfo.generalInfo.specifics.spells[f]}/>  {this.deleteSpell(3, idx)} </h6>))}
                                     </Card.Body>
                                 </Card>
                                 <Card border="dark" style={{textAlign: 'center', fontSize: '16px', marginBottom: '5px', width: '100%', margin: '20px'}}>
@@ -1284,7 +1046,7 @@ class CharacterSheet extends Component {
                                         Fourth Level Spells <Button style={{float: 'right'}} variant='outline-success' onClick={() => {this.setState({...this.state, showSpell: [true, 4]})}}>Add</Button>
                                     </Card.Header>
                                     <Card.Body style={{marginBottom: '0', fontSize: '14px', padding: '1px', margin: '0'}}>
-                                        {this.state.spells[4].map((f, idx) => (<h6 key={idx}>{f} {this.information(f, this.props.dndInfo.generalInfo.specifics.spells[f])}  {this.deleteSpell(4, idx)} </h6>))}
+                                        {this.state.spells[4].map((f, idx) => (<h6 key={idx}>{f} <Information name={f} info={this.props.dndInfo.generalInfo.specifics.spells[f]}/>  {this.deleteSpell(4, idx)} </h6>))}
                                     </Card.Body>
                                 </Card>
                                 <Card border="dark" style={{textAlign: 'center', fontSize: '16px', marginBottom: '5px', width: '100%', margin: '20px'}}>
@@ -1292,7 +1054,7 @@ class CharacterSheet extends Component {
                                         Fifth Level Spells <Button style={{float: 'right'}} variant='outline-success' onClick={() => {this.setState({...this.state, showSpell: [true, 5]})}}>Add</Button>
                                     </Card.Header>
                                     <Card.Body style={{marginBottom: '0', fontSize: '14px', padding: '1px', margin: '0'}}>
-                                        {this.state.spells[5].map((f, idx) => (<h6 key={idx}>{f} {this.information(f, this.props.dndInfo.generalInfo.specifics.spells[f])}  {this.deleteSpell(5, idx)} </h6>))}
+                                        {this.state.spells[5].map((f, idx) => (<h6 key={idx}>{f} <Information name={f} info={this.props.dndInfo.generalInfo.specifics.spells[f]}/>  {this.deleteSpell(5, idx)} </h6>))}
                                     </Card.Body>
                                 </Card>
                             </Col>
@@ -1302,7 +1064,7 @@ class CharacterSheet extends Component {
                                         Sixth Level Spells <Button style={{float: 'right'}} variant='outline-success' onClick={() => {this.setState({...this.state, showSpell: [true, 6]})}}>Add</Button>
                                     </Card.Header>
                                     <Card.Body style={{marginBottom: '0', fontSize: '14px', padding: '1px', margin: '0'}}>
-                                        {this.state.spells[6].map((f, idx) => (<h6 key={idx}>{f} {this.information(f, this.props.dndInfo.generalInfo.specifics.spells[f])}  {this.deleteSpell(6, idx)} </h6>))}
+                                        {this.state.spells[6].map((f, idx) => (<h6 key={idx}>{f} <Information name={f} info={this.props.dndInfo.generalInfo.specifics.spells[f]}/>  {this.deleteSpell(6, idx)} </h6>))}
                                     </Card.Body>
                                 </Card>
                                 <Card border="dark" style={{textAlign: 'center', fontSize: '16px', marginBottom: '5px', width: '100%', margin: '20px'}}>
@@ -1310,7 +1072,7 @@ class CharacterSheet extends Component {
                                         Seventh Level Spells <Button style={{float: 'right'}} variant='outline-success' onClick={() => {this.setState({...this.state, showSpell: [true, 7]})}}>Add</Button>
                                     </Card.Header>
                                     <Card.Body style={{marginBottom: '0', fontSize: '14px', padding: '1px', margin: '0'}}>
-                                        {this.state.spells[7].map((f, idx) => (<h6 key={idx}>{f} {this.information(f, this.props.dndInfo.generalInfo.specifics.spells[f])}  {this.deleteSpell(7, idx)} </h6>))}
+                                        {this.state.spells[7].map((f, idx) => (<h6 key={idx}>{f} <Information name={f} info={this.props.dndInfo.generalInfo.specifics.spells[f]}/>  {this.deleteSpell(7, idx)} </h6>))}
                                     </Card.Body>
                                 </Card>
                                 <Card border="dark" style={{textAlign: 'center', fontSize: '16px', marginBottom: '5px', width: '100%', margin: '20px'}}>
@@ -1318,7 +1080,7 @@ class CharacterSheet extends Component {
                                         Eighth Level Spells <Button style={{float: 'right'}} variant='outline-success' onClick={() => {this.setState({...this.state, showSpell: [true, 8]})}}>Add</Button>
                                     </Card.Header>
                                     <Card.Body style={{marginBottom: '0', fontSize: '14px', padding: '1px', margin: '0'}}>
-                                        {this.state.spells[8].map((f, idx) => (<h6 key={idx}>{f} {this.information(f, this.props.dndInfo.generalInfo.specifics.spells[f])}  {this.deleteSpell(8, idx)} </h6>))}
+                                        {this.state.spells[8].map((f, idx) => (<h6 key={idx}>{f} <Information name={f} info={this.props.dndInfo.generalInfo.specifics.spells[f]}/>  {this.deleteSpell(8, idx)} </h6>))}
                                     </Card.Body>
                                 </Card>
                                 <Card border="dark" style={{textAlign: 'center', fontSize: '16px', marginBottom: '5px', width: '100%', margin: '20px'}}>
@@ -1326,7 +1088,7 @@ class CharacterSheet extends Component {
                                         Ninth Level Spells <Button style={{float: 'right'}} variant='outline-success' onClick={() => {this.setState({...this.state, showSpell: [true, 9]})}}>Add</Button>
                                     </Card.Header>
                                     <Card.Body style={{marginBottom: '0', fontSize: '14px', padding: '1px', margin: '0'}}>
-                                        {this.state.spells[9].map((f, idx) => (<h6 key={idx}>{f} {this.information(f, this.props.dndInfo.generalInfo.specifics.spells[f])}  {this.deleteSpell(9, idx)} </h6>))}
+                                        {this.state.spells[9].map((f, idx) => (<h6 key={idx}>{f} <Information name={f} info={this.props.dndInfo.generalInfo.specifics.spells[f]}/>  {this.deleteSpell(9, idx)} </h6>))}
                                     </Card.Body>
                                 </Card>
                             </Col>
