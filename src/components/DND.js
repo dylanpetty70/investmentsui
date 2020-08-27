@@ -30,6 +30,11 @@ class DND extends Component {
 		if(!this.props.dndInfo.generalInfo){
 			this.props.handleGrab5e();
 		}
+		if(this.props.envOptions.current){
+			this.props.handleGrabDraggable(this.props.envOptions.current);
+		} else {
+			this.props.handleGrabDraggable(this.props.envOptions.all[0])
+		}
 	}
 
 	redirectNonuser(){

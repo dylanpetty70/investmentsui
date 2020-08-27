@@ -20,8 +20,17 @@ class DNDGuest extends Component {
 	}
 
 	componentDidMount(){
+		this.props.handleGrabOptions();
+		if(!this.props.envOptions.current) { 
+			setTimeout(this.props.changeCurrentEnv(this.props.envOptions.all[0]), 500) 
+		}
 		if(!this.props.dndInfo.generalInfo){
 			this.props.handleGrab5e();
+		}
+		if(this.props.envOptions.current){
+			this.props.handleGrabDraggable(this.props.envOptions.current);
+		} else {
+			this.props.handleGrabDraggable(this.props.envOptions.all[0])
 		}
 	}
 
@@ -29,7 +38,7 @@ class DNDGuest extends Component {
 		const handleSelect = (eventKey) => this.setState({...this.state, page: eventKey});
 
 		return (
-		<Nav variant="tabs" defaultActiveKey="home" style={{margin: '10px'}} onSelect={handleSelect}>
+		<Nav variant="tabs" defaultActiveKey="gameinfo" style={{margin: '10px'}} onSelect={handleSelect}>
 			<Nav.Item>
 			<Nav.Link eventKey="gameinfo">Game Info</Nav.Link>
 			</Nav.Item>
