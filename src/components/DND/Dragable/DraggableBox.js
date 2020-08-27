@@ -19,9 +19,9 @@ function getStyles(left, top, isDragging) {
   }
 }
 const DraggableBox = (props) => {
-  const { id, left, top, object } = props
+  const { id, left, top, object, scale } = props
   const [{ isDragging }, drag, preview] = useDrag({
-    item: { type: object, id: id, left, top, title: object },
+    item: { type: object, id: id, left, top, title: object, scale: scale },
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),
@@ -32,7 +32,7 @@ const DraggableBox = (props) => {
   if(props.draggable.items){
         return (
         <div ref={drag} style={getStyles(left, top, isDragging)}>
-          {ReactHtmlParser(props.draggable.items[object].replace(/32/g, String(props.draggable.scale)))}
+          {ReactHtmlParser(props.draggable.items[object].title.replace(/32/g, String(props.draggable.scale * props.scale)))}
 	      <MdDelete  onClick={() => {props.handleUpdateCurrent(props.envOptions.current, props.draggable.current.filter((x,i) => i !== Number(props.id.replace('id',''))))}}/>
         </div>
       )

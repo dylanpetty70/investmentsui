@@ -36,10 +36,12 @@ function updateCurrent(data){
 	}
 }
 
-function newEnvironment(data){
+function newEnvironment(data, name, options){
 	return{
 		type: NEW_ENVIRONMENT,
-		data
+		data,
+		name,
+		options
 	}
 }
 
@@ -97,7 +99,7 @@ export function handleNewEnvironment(name){
 	return async (dispatch) => {
 		await api.newEnvironment(name)
 			.then((data) => {
-				dispatch(newEnvironment(data));
+				dispatch(newEnvironment(data[0], name, data[1]));
 			})
 	}
 }

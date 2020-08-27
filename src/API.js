@@ -9,28 +9,7 @@ let year = today.getFullYear();
 let key = 'bsrllo748v6tucpgfv0g';
 
 //https://www.dnd5eapi.co/api/spells/acid-arrow/
-/*{
-	"ability-scores": "/api/ability-scores",
-	"classes": "/api/classes",
-	"conditions": "/api/conditions",
-	"damage-types": "/api/damage-types",
-	"equipment-categories": "/api/equipment-categories",
-	"equipment": "/api/equipment",
-	"features": "/api/features",
-	"languages": "/api/languages",
-	"magic-schools": "/api/magic-schools",
-	"monsters": "/api/monsters",
-	"proficiencies": "/api/proficiencies",
-	"races": "/api/races",
-	"skills": "/api/skills",
-	"spellcasting": "/api/spellcasting",
-	"spells": "/api/spells",
-	"starting-equipment": "/api/starting-equipment",
-	"subclasses": "/api/subclasses",
-	"subraces": "/api/subraces",
-	"traits": "/api/traits",
-	"weapon-properties": "/api/weapon-properties"
-	}*/
+
 
 export async function genGovBondRate(){
 	let lastYear = year - 1;
@@ -321,7 +300,7 @@ export async function updateCurrent(environment, current){
 	return grabDraggable(environment);
 }
 
-export async function addItem(item, component){
+export async function addItem(item, component, tag){
 	
 	let result = await api('https://dylan-s-database.firebaseio.com/dnd/environments.json', {
 			headers: {
@@ -331,7 +310,7 @@ export async function addItem(item, component){
 				"Access-Control-Allow-Headers": "append,delete,entries,foreach,get,has,keys,set,values,Authorization"
 			}})
 	let temp = result.data.items;
-	temp[item] = component;
+	temp[item] = {title: component, tag: [[tag]]};
 	await api.put('https://dylan-s-database.firebaseio.com/dnd/environments/items.json',
 		temp
 		)
@@ -340,7 +319,7 @@ export async function addItem(item, component){
 
 export async function newEnvironment(name){
 	
-	let result = await api('https://dylan-s-database.firebaseio.com/dnd/environments.json', {
+	let result = await api('https://dylan-s-database.firebaseio.com/dnd/environments/options.json', {
 			headers: {
 				"Content-type": "application/json; charset=UTF-8",
 				"Access-Control-Allow-Origin": "*",
@@ -348,11 +327,25 @@ export async function newEnvironment(name){
 				"Access-Control-Allow-Headers": "append,delete,entries,foreach,get,has,keys,set,values,Authorization"
 			}})
 	let temp = result.data;
-	temp.options[name] = { name: name, items: []};
-	await api.put('https://dylan-s-database.firebaseio.com/dnd/environments.json',
+	temp[name] = { name: name, items: [], scale: 30};
+	await api.put('https://dylan-s-database.firebaseio.com/dnd/environments/options.json',
 		temp
 		)
-	return grabDraggable(name);
+	let tempKeys = Object.keys(temp);
+
+	let result1 = await api('https://dylan-s-database.firebaseio.com/dnd/environments.json', {
+		headers: {
+			"Content-type": "application/json; charset=UTF-8",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "POST, GET, OPTIONS, DELETE, PUT",
+            "Access-Control-Allow-Headers": "append,delete,entries,foreach,get,has,keys,set,values,Authorization"
+		}})
+	let temp1 = {};
+	temp1['items'] = result1.data.items;
+	temp1['current'] = (result1.data.options[name].items) ? result1.data.options[name].items : [];
+	temp1['scale'] = Number(result1.data.options[name].scale);
+
+	return [temp1, tempKeys];
 }
 
 export async function grabOptions(){

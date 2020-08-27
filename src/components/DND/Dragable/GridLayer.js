@@ -15,27 +15,31 @@ class GridLayer extends Component {
 
 		for(let i = this.props.draggable.scale; i < totalWidth; i += this.props.draggable.scale){
 			let variableLeft = String(i + 12 - this.props.draggable.scale) + 'px';
-			let variableTop = String(i + 130 - this.props.draggable.scale) + 'px';
+			let variableTop = String(i + 127 - this.props.draggable.scale) + 'px';
 			
 			const styleTop ={
 				position: 'absolute',
-				width: totalWidth,
+				width: '75vw',
 				height: this.props.draggable.scale,
 				border: '1px solid',
 				borderColor: 'darkGrey',
-				left: '5px',
+				left: '10px',
 				top: variableTop,
-				opacity: .4
+				opacity: .5,
+				zIndex: 1000,
+				pointerEvents: 'none'
 			}
 			const styleBottom ={
 				position: 'absolute',
 				width: this.props.draggable.scale,
-				height: totalWidth,
+				height: '75vw',
 				border: '1px solid',
 				borderColor: 'darkGrey',
 				left: variableLeft,
-				top: '128px',
-				opacity: .4
+				top: '127px',
+				opacity: .5,
+				zIndex: 1000,
+				pointerEvents: 'none'
 			}
 
 			let bottomKey = i + 'Bottom';

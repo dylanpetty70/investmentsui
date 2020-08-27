@@ -18,15 +18,18 @@ function renderBox(item, key, updateBoxes) {
 }
 const Container = (props) => {
   let temp = {};
-  let count = (props.draggable.current) ? Object.keys(props.draggable.current).length : 0;
   if(props.draggable.current){
       if(Object.keys(props.draggable.current).length > 0){
           for(let i = 0; i < Object.keys(props.draggable.current).length; i++){
             let temp1 = (props.draggable.items) ? Object.keys(props.draggable.items).find(key => key === props.draggable.current[i].item) : [];
-            temp[['id' + i]] = {id: 'id'+i, top: props.draggable.current[i].pTop, left: props.draggable.current[i].pLeft, object: temp1};
+            temp[['id' + i]] = {id: 'id'+i, top: props.draggable.current[i].pTop, left: props.draggable.current[i].pLeft, object: temp1, scale: props.draggable.current[i].scale};
           }
-        }
-    }
+        } else {
+            temp = {};  
+		}
+    } else {
+        temp = {};
+	}
 
   const [boxes, setBoxes] = useState(temp)
   const moveBox = useCallback(
@@ -44,16 +47,37 @@ const Container = (props) => {
 
   const updateBoxes = useMemo(() => {
       let temp = {};
+       if(props.draggable.current){
+            if(Object.keys(props.draggable.current).length > 0){
+                for(let i = 0; i < Object.keys(props.draggable.current).length; i++){
+                let temp1 = (props.draggable.items) ? Object.keys(props.draggable.items).find(key => key === props.draggable.current[i].item) : '';
+                temp[['id' + i]] = {id: 'id'+i, top: props.draggable.current[i].pTop, left: props.draggable.current[i].pLeft, object: temp1, scale: props.draggable.current[i].scale};
+                }
+                setBoxes(temp);
+            } else {
+                setBoxes({})     
+			}
+        } else {
+            setBoxes({})  
+		}
+  }, [props.draggable]);
+
+    const updateBoxes1 = () => {
+      let temp = {};
       if(props.draggable.current){
             if(Object.keys(props.draggable.current).length > 0){
                 for(let i = 0; i < Object.keys(props.draggable.current).length; i++){
                 let temp1 = (props.draggable.items) ? Object.keys(props.draggable.items).find(key => key === props.draggable.current[i].item) : '';
-                temp[['id' + i]] = {id: 'id'+i, top: props.draggable.current[i].pTop, left: props.draggable.current[i].pLeft, object: temp1};
+                temp[['id' + i]] = {id: 'id'+i, top: props.draggable.current[i].pTop, left: props.draggable.current[i].pLeft, object: temp1, scale: props.draggable.current[i].scale};
                 }
                 setBoxes(temp);
-            }
-        }
-  }, [count]);
+            } else {
+                setBoxes({})     
+			}
+        } else {
+            setBoxes({})  
+		}
+  };
 
   const [, drop] = useDrop({
     accept: (props.draggable.items) ? [...Object.keys(props.draggable.items)] : [],
@@ -65,9 +89,13 @@ const Container = (props) => {
       moveBox(item.id, left, top)
       let current = props.draggable.current;
       let index = Number(item.id.replace('id', ''));
-      current[index].pLeft = left;
-      current[index].pTop = top;
-      props.handleUpdateCurrent(props.envOptions.current, current)
+      if(current[index]){
+          current[index].pLeft = left;
+          current[index].pTop = top;
+          props.handleUpdateCurrent(props.envOptions.current, current)
+	  } else {
+       updateBoxes1();
+	  }
       return undefined
     },
   })
