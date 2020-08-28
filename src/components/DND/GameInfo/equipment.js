@@ -139,12 +139,12 @@ class Equipment extends Component {
 
 	twoHandDamage(){
 		let temp = [];
-		if(this.state.data.2h_damage){
+		if(this.state.data[`2h_damage`]){
 			temp.push(<h6 key={'d'}>Two Handed Damage</h6>)
 			temp.push(<em key={'dd'}>Damage Dice</em>)
-			temp.push(<p key={'ddp'}>{this.state.data.2h_damage.damage_dice}</p>)
+			temp.push(<p key={'ddp'}>{this.state.data[`2h_damage`].damage_dice}</p>)
 			temp.push(<em key={'dt'}>Damage Type</em>)
-			temp.push(<p key={'dtp'}>{this.state.data.2h_damage.damage_type.name}</p>)
+			temp.push(<p key={'dtp'}>{this.state.data[`2h_damage`].damage_type.name}</p>)
 		}
 		return temp;
 	}
