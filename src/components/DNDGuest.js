@@ -1,21 +1,21 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import Nav from 'react-bootstrap/Nav';
+import ToggleButton from 'react-bootstrap/ToggleButton';
+import CampaignDetails from './DND/campaignDetails';
 import CharacterInfo from './DND/characterInfo';
+import CreateEnv from './DND/createEnv';
+import GameInfo from './DND/gameInfo';
 import Roller from './DND/roller';
 import {handleUpdate5e, handleGrab5e} from '../actions/5eInfo';
-import {handleGrabOptions, handleGrabDraggable, changeCurrentEnv} from '../actions/draggable';
-import CreateEnv from './DND/createEnv';
-import ButtonGroup from 'react-bootstrap/ButtonGroup';
-import ToggleButton from 'react-bootstrap/ToggleButton';
-import GameInfo from './DND/gameInfo';
-import CampaignDetails from './DND/campaignDetails';
+import {handleGrabDraggable, handleNewEnvironment, changeCurrentEnv, handleGrabOptions} from '../actions/draggable';
+import ButtonGroup from 'react-bootstrap/ButtonGroup'
 
 class DNDGuest extends Component {
 
 	constructor(props){
 		super(props);
-        this.state = {page: 'gameInfo', showDice: false};
+        this.state = {page: 'gameinfo', showDice: false};
 		this.navTabs = this.navTabs.bind(this);
 		this.switchStatement = this.switchStatement.bind(this);
 	}
@@ -44,10 +44,10 @@ class DNDGuest extends Component {
 			<Nav.Link eventKey="gameinfo">Game Info</Nav.Link>
 			</Nav.Item>
 			<Nav.Item>
-			<Nav.Link eventKey="characterinfo">Character Info</Nav.Link>
+			<Nav.Link eventKey="createenvironment">Create Environment</Nav.Link>
 			</Nav.Item>
 			<Nav.Item>
-			<Nav.Link eventKey="createenvironment">Create Environment</Nav.Link>
+			<Nav.Link eventKey="characterinfo">Character Info</Nav.Link>
 			</Nav.Item>
 			<Nav.Item>
 			<Nav.Link eventKey="campaigndetails">Campaign Details</Nav.Link>
@@ -70,14 +70,14 @@ class DNDGuest extends Component {
 
 	switchStatement(){
 		switch(this.state.page){
-			case 'gameinfo':
-				return (<GameInfo />);
-			case 'characterinfo':
-				return (<CharacterInfo />);
 			case 'createenvironment':
 				return (<CreateEnv />);
-			case 'campaigndetails':
+			case 'gameinfo':
+				return (<GameInfo />);
+			case 'campaigndetails': 
 				return (<CampaignDetails />);
+			case 'characterinfo':
+				return (<CharacterInfo />);
 			default:
 				return (<></>);
 		}
@@ -90,7 +90,7 @@ class DNDGuest extends Component {
 			<div style={{minWidth: '75%', float: 'left'}}>
 			{this.switchStatement()}
 			</div>
-			<div style={{right: '0', position: 'absolute', margin: '20px', maxWidth: '300px'}}>
+			<div style={{right: '0', position: 'absolute', margin: '10px', maxWidth: '300px'}}>
 			{(this.state.showDice) ? <Roller /> : <></>}
 			</div>
 			</div>
@@ -108,7 +108,8 @@ const mapStateToProps = state => {
 export default connect(mapStateToProps, {
 	handleUpdate5e,
 	handleGrab5e,
-	handleGrabOptions, 
-	handleGrabDraggable, 
-	changeCurrentEnv
+	handleGrabDraggable,
+	handleNewEnvironment,
+	changeCurrentEnv, 
+	handleGrabOptions
 })(DNDGuest);
