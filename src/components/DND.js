@@ -43,14 +43,17 @@ class DND extends Component {
 		}
 	}
 
-	//description of next session
-	//general overview of world
-	//Monsters in next session vs. monsters used
-	//Names/characters/familiars
-	//strategies for combat
-	//audio for game ambiance
+	//campaignDetails
+		//description of next session
+		//general overview of world
+		//Names/characters/familiars
+		//one note type structure by the same gameinfo navigation
+		//campaign  selectable
+	
+	//Tag things in each gameinfo component
+	//audio for game ambiance https://freepd.com/music/Ancient%20Rite.mp3
 
-	//dnd board: conditions, damage types, magic-schools, weapon properties,  spells
+	//dashboard: per user, tag things you want in your dashboard - future feature
 
 	navTabs(){
 		const handleSelect = (eventKey) => this.setState({...this.state, page: eventKey});

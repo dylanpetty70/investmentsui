@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import { connect } from 'react-redux';
 import Classes from './GameInfo/classes';
 import Conditions from './GameInfo/conditions';
 import DamageTypes from './GameInfo/damageTypes';
@@ -13,60 +14,72 @@ import Traits from './GameInfo/traits';
 import WeaponProperties from './GameInfo/weaponProperties';
 import Nav from 'react-bootstrap/Nav';
 import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
+import Card from 'react-bootstrap/Card';
+import { Typeahead } from 'react-bootstrap-typeahead';
 
 class GameInfo extends Component {
 
 	constructor(props){
 		super(props);
-        this.state = {page: 'spells'};
+        this.state = {page: 'spells', tempSearch: '', placeholder: 'Spell', selected: '', searchLabel: 'Spells'};
 		this.navTabs = this.navTabs.bind(this);
 		this.switchStatement = this.switchStatement.bind(this);
+		this.options = this.options.bind(this);
 	}
 
 	componentDidMount(){
 		
 	}
 
+	options(category){
+		let temp = [];
+		if(this.props.dndInfo !== {}){
+			temp = Object.keys(this.props.dndInfo.generalInfo.specifics[category])
+		}
+		return temp;
+	}
+
 	navTabs(){
-		const handleSelect = (eventKey) => this.setState({...this.state, page: eventKey});
+		const handleSelect = (eventKey) => this.setState({...this.state, tempSearch: '', page: eventKey.split(',')[0], placeholder: eventKey.split(',')[1], searchLabel: eventKey.split(',')[2]});
 
 		return (
 		<Nav defaultActiveKey="spells" className="flex-column mr-auto" onSelect={handleSelect}>
 			<Nav.Item>
-			<Nav.Link style={{color: 'white', fontSize: '20px'}} eventKey="classes"><Button variant="secondary" style={{width: '100%', textAlign: 'left'}}>Classes</Button></Nav.Link>
+			<Nav.Link style={{color: 'white', fontSize: '20px'}} eventKey={['classes','Class','Classes']}><Button variant="secondary" style={{width: '100%', textAlign: 'left'}} active={this.state.page === 'classes'}>Classes</Button></Nav.Link>
 			</Nav.Item>
 			<Nav.Item>
-			<Nav.Link style={{color: 'white', fontSize: '20px'}} eventKey="conditions"><Button variant="secondary" style={{width: '100%', textAlign: 'left'}}>Conditions</Button></Nav.Link>
+			<Nav.Link style={{color: 'white', fontSize: '20px'}} eventKey={['conditions','Condition', 'Conditions']}><Button variant="secondary" style={{width: '100%', textAlign: 'left'}} active={this.state.page === 'conditions'}>Conditions</Button></Nav.Link>
 			</Nav.Item>
 			<Nav.Item>
-			<Nav.Link style={{color: 'white', fontSize: '20px'}} eventKey="damagetypes"><Button variant="secondary" style={{width: '100%', textAlign: 'left'}}>Damage Types</Button></Nav.Link>
+			<Nav.Link style={{color: 'white', fontSize: '20px'}} eventKey={['damage-types', 'Damage Type', 'Damage Types']}><Button variant="secondary" style={{width: '100%', textAlign: 'left'}} active={this.state.page === 'damage-types'}>Damage Types</Button></Nav.Link>
 			</Nav.Item>
 			<Nav.Item>
-			<Nav.Link style={{color: 'white', fontSize: '20px'}} eventKey="equipment"><Button variant="secondary" style={{width: '100%', textAlign: 'left'}}>Equipment</Button></Nav.Link>
+			<Nav.Link style={{color: 'white', fontSize: '20px'}} eventKey={['equipment', 'Equipment', 'Equipment']}><Button variant="secondary" style={{width: '100%', textAlign: 'left'}} active={this.state.page === 'equipment'}>Equipment</Button></Nav.Link>
 			</Nav.Item>
 			<Nav.Item>
-			<Nav.Link style={{color: 'white', fontSize: '20px'}} eventKey="features"><Button variant="secondary" style={{width: '100%', textAlign: 'left'}}>Features</Button></Nav.Link>
+			<Nav.Link style={{color: 'white', fontSize: '20px'}} eventKey={['features', 'Feature', 'Features']}><Button variant="secondary" style={{width: '100%', textAlign: 'left'}} active={this.state.page === 'features'}>Features</Button></Nav.Link>
 			</Nav.Item>
 			<Nav.Item>
-			<Nav.Link style={{color: 'white', fontSize: '20px'}} eventKey="languages"><Button variant="secondary" style={{width: '100%', textAlign: 'left'}}>Languages</Button></Nav.Link>
+			<Nav.Link style={{color: 'white', fontSize: '20px'}} eventKey={['languages','Language','Languages']}><Button variant="secondary" style={{width: '100%', textAlign: 'left'}} active={this.state.page === 'languages'}>Languages</Button></Nav.Link>
 			</Nav.Item>
 			<Nav.Item>
-			<Nav.Link style={{color: 'white', fontSize: '20px'}} eventKey="magicschools"><Button variant="secondary" style={{width: '100%', textAlign: 'left'}}>Magic Schools</Button></Nav.Link>
+			<Nav.Link style={{color: 'white', fontSize: '20px'}} eventKey={['magic-schools', 'Magic School', 'Magic Schools']}><Button variant="secondary" style={{width: '100%', textAlign: 'left'}} active={this.state.page === 'magic-schools'}>Magic Schools</Button></Nav.Link>
 			</Nav.Item>
 			<Nav.Item>
-			<Nav.Link style={{color: 'white', fontSize: '20px'}} eventKey="monsters"><Button variant="secondary" style={{width: '100%', textAlign: 'left'}}>Monsters</Button></Nav.Link>
+			<Nav.Link style={{color: 'white', fontSize: '20px'}} eventKey={['monsters', 'Monster', 'Monsters']}><Button variant="secondary" style={{width: '100%', textAlign: 'left'}} active={this.state.page === 'monsters'}>Monsters</Button></Nav.Link>
 			</Nav.Item>
 			<Nav.Item>
-			<Nav.Link style={{color: 'white', fontSize: '20px'}} eventKey="races"><Button variant="secondary" style={{width: '100%', textAlign: 'left'}}>Races</Button></Nav.Link>
+			<Nav.Link style={{color: 'white', fontSize: '20px'}} eventKey={['races', 'Race', 'Races']}><Button variant="secondary" style={{width: '100%', textAlign: 'left'}} active={this.state.page === 'races'}>Races</Button></Nav.Link>
 			</Nav.Item>
 			<Nav.Item>
-			<Nav.Link style={{color: 'white', fontSize: '20px'}} eventKey="spells"><Button variant="secondary" style={{width: '100%', textAlign: 'left'}} active={this.state.page === 'spells'}>Spells</Button></Nav.Link>
+			<Nav.Link style={{color: 'white', fontSize: '20px'}} eventKey={['spells', 'Spell', 'Spells']}><Button variant="secondary" style={{width: '100%', textAlign: 'left'}} active={this.state.page === 'spells'}>Spells</Button></Nav.Link>
 			</Nav.Item>
 			<Nav.Item>
-			<Nav.Link style={{color: 'white', fontSize: '20px'}} eventKey="traits"><Button variant="secondary" style={{width: '100%', textAlign: 'left'}}>Traits</Button></Nav.Link>
+			<Nav.Link style={{color: 'white', fontSize: '20px'}} eventKey={['traits', 'Trait', 'Traits']}><Button variant="secondary" style={{width: '100%', textAlign: 'left'}} active={this.state.page === 'traits'}>Traits</Button></Nav.Link>
 			</Nav.Item>
 			<Nav.Item>
-			<Nav.Link style={{color: 'white', fontSize: '20px'}} eventKey="weaponproperties"><Button variant="secondary" style={{width: '100%', textAlign: 'left'}}>Weapon Properties</Button></Nav.Link>
+			<Nav.Link style={{color: 'white', fontSize: '20px'}} eventKey={['weapon-properties', 'Weapon Property', 'Weapon Properties']}><Button variant="secondary" style={{width: '100%', textAlign: 'left'}} active={this.state.page === 'weapon-properties'}>Weapon Properties</Button></Nav.Link>
 			</Nav.Item>
 		</Nav>
 		);
@@ -75,29 +88,29 @@ class GameInfo extends Component {
 	switchStatement(){
 		switch(this.state.page){
 			case 'classes':
-				return (<Classes />);
+				return (<Classes item={this.state.tempSearch}/>);
 			case 'conditions':
-				return (<Conditions />);
-			case 'damagetypes': 
-				return (<DamageTypes />);
+				return (<Conditions item={this.state.tempSearch}/>);
+			case 'damage-types': 
+				return (<DamageTypes item={this.state.tempSearch}/>);
 			case 'equipment':
-				return (<Equipment />);
+				return (<Equipment item={this.state.tempSearch}/>);
 			case 'features':
-				return (<Features />);
+				return (<Features item={this.state.tempSearch}/>);
 			case 'languages':
-				return (<Languages />);
-			case 'magicschools': 
-				return (<MagicSchools />);
+				return (<Languages item={this.state.tempSearch}/>);
+			case 'magic-schools': 
+				return (<MagicSchools item={this.state.tempSearch}/>);
 			case 'monsters':
-				return (<Monsters />);
+				return (<Monsters item={this.state.tempSearch}/>);
 			case 'races':
-				return (<Races />);
+				return (<Races item={this.state.tempSearch}/>);
 			case 'spells':
-				return (<Spells />);
+				return (<Spells item={this.state.tempSearch}/>);
 			case 'traits': 
-				return (<Traits />);
-			case 'weaponproperties':
-				return (<WeaponProperties />);
+				return (<Traits item={this.state.tempSearch}/>);
+			case 'weapon-properties':
+				return (<WeaponProperties item={this.state.tempSearch}/>);
 			default:
 				return (<></>);
 		}
@@ -105,17 +118,48 @@ class GameInfo extends Component {
 	render(){
 		return(
             <div>
-			
 			<div className="p-3 bg-secondary text-white" style={{position: 'absolute', left: '0', top: '113px', minHeight: '100%', margin: '0'}}>
 				<h2>Categories</h2>
 					<hr/>
 				{this.navTabs()}
 			</div>
-			{this.switchStatement()}
+			<div className="p-3 bg-secondary text-white" style={{position: 'absolute', left: '0', top: '113px', minWidth: '100%', margin: '0' , marginLeft: '225px'}}>
+			<div style={{display: 'flex', width: '100%', marginLeft: '20px'}}>
+				<Form inline={true}>
+					<Form.Label style={{fontSize: '16px', marginRight: '30px'}}>{'Search ' + this.state.searchLabel}</Form.Label>
+					<Form.Group>
+						<Typeahead
+								id="searchGameInfo"
+								labelKey="gameInfo"
+								onChange={(text) => {this.setState({...this.state, tempSearch: text[0]})}}
+								options={this.options(this.state.page)}
+								placeholder={"Choose a "+ this.state.placeholder + "..."}
+						/>
+					</Form.Group>
+				</Form>
+			</div>
+			</div>
+			<div style={{color: 'black', marginLeft: '300px', marginTop: '150px', border: '1px solid', borderColor: 'lightGrey', width: '70vw'}}>
+				{(this.state.tempSearch !== '') ? 
+				<Card style={{width: '100%', height: '100%'}} body>
+					<Card.Title style={{textAlign: 'center'}}>{this.state.tempSearch}</Card.Title>
+					<hr style={{width: '80%'}} />
+					{this.switchStatement()}
+				</Card>
+				:
+				<></>
+				}
+			</div>
 			</div>
 		)
 	}
 }
 
 
-export default GameInfo;
+const mapStateToProps = state => {
+	return{
+		dndInfo: state.dndInfo
+	}
+}
+
+export default connect(mapStateToProps)(GameInfo);

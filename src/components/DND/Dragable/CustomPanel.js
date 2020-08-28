@@ -110,7 +110,6 @@ class CustomPanel extends Component {
 							  onChange={(text) => {this.setState({...this.state, tempToken: {...this.state.tempToken, creature: text[0]}})}}
 							  options={this.objectItems('creature')}
 							  placeholder="Choose a creature token..."
-							  selected={this.state.creature}
 							/>
 						</Form.Group>
 							</Col>
@@ -145,7 +144,6 @@ class CustomPanel extends Component {
 							  onChange={(text) => {this.setState({...this.state, tempToken: {...this.state.tempToken, background: text[0]}})}}
 							  options={this.objectItems('background')}
 							  placeholder="Choose a background token..."
-							  selected={this.state.background}
 							/>
 						</Form.Group>
 							</Col>
@@ -180,7 +178,6 @@ class CustomPanel extends Component {
 							  onChange={(text) => {this.setState({...this.state, tempToken: {...this.state.tempToken, scene: text[0]}})}}
 							  options={this.objectItems('scene')}
 							  placeholder="Choose a scene token..."
-							  selected={this.state.scene}
 							/>
 						</Form.Group>
 							</Col>

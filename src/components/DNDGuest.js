@@ -4,6 +4,7 @@ import Nav from 'react-bootstrap/Nav';
 import CharacterInfo from './DND/characterInfo';
 import Roller from './DND/roller';
 import {handleUpdate5e, handleGrab5e} from '../actions/5eInfo';
+import {handleGrabOptions, handleGrabDraggable, changeCurrentEnv} from '../actions/draggable';
 import CreateEnv from './DND/createEnv';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import ToggleButton from 'react-bootstrap/ToggleButton';
@@ -100,10 +101,14 @@ class DNDGuest extends Component {
 const mapStateToProps = state => {
 	return{
         dndInfo: state.dndInfo,
+		envOptions: state.envOptions
 	}
 }
 
 export default connect(mapStateToProps, {
 	handleUpdate5e,
 	handleGrab5e,
+	handleGrabOptions, 
+	handleGrabDraggable, 
+	changeCurrentEnv
 })(DNDGuest);
