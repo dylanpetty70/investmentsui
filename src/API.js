@@ -380,3 +380,139 @@ export async function changeScale(scale, environment){
 		)
 	return temp;
 }
+
+export async function grabCampaigns(){
+	
+	let result = await api('https://dylan-s-database.firebaseio.com/dnd/campaigns.json', {
+			headers: {
+				"Content-type": "application/json; charset=UTF-8",
+				"Access-Control-Allow-Origin": "*",
+				"Access-Control-Allow-Methods": "POST, GET, OPTIONS, DELETE, PUT",
+				"Access-Control-Allow-Headers": "append,delete,entries,foreach,get,has,keys,set,values,Authorization"
+			}})
+	let temp = Object.keys(result.data);
+	return temp;
+}
+
+export async function changeCampaign(campaign){
+	
+	let result = await api('https://dylan-s-database.firebaseio.com/dnd/campaigns.json', {
+			headers: {
+				"Content-type": "application/json; charset=UTF-8",
+				"Access-Control-Allow-Origin": "*",
+				"Access-Control-Allow-Methods": "POST, GET, OPTIONS, DELETE, PUT",
+				"Access-Control-Allow-Headers": "append,delete,entries,foreach,get,has,keys,set,values,Authorization"
+			}})
+	let temp =  result.data[campaign];
+	return temp;
+}
+
+export async function addCampaign(campaign){
+
+	let result = await api('https://dylan-s-database.firebaseio.com/dnd/campaigns.json', {
+			headers: {
+				"Content-type": "application/json; charset=UTF-8",
+				"Access-Control-Allow-Origin": "*",
+				"Access-Control-Allow-Methods": "POST, GET, OPTIONS, DELETE, PUT",
+				"Access-Control-Allow-Headers": "append,delete,entries,foreach,get,has,keys,set,values,Authorization"
+			}})
+	let temp = result.data;
+	temp[campaign] = {[`First Tab`]: [{notes:[], subnotepad: "First Subtab"}]};
+	
+	await api.put('https://dylan-s-database.firebaseio.com/dnd/campaigns.json',
+		temp
+		)
+	return temp[campaign];
+}
+
+export async function addNotepad(campaign, notepad){
+
+	let result = await api('https://dylan-s-database.firebaseio.com/dnd/campaigns/' + campaign + '.json', {
+			headers: {
+				"Content-type": "application/json; charset=UTF-8",
+				"Access-Control-Allow-Origin": "*",
+				"Access-Control-Allow-Methods": "POST, GET, OPTIONS, DELETE, PUT",
+				"Access-Control-Allow-Headers": "append,delete,entries,foreach,get,has,keys,set,values,Authorization"
+			}})
+	let temp = result.data;
+	temp[notepad] = '';
+	
+	await api.put('https://dylan-s-database.firebaseio.com/dnd/campaigns/' + campaign + '.json',
+		temp
+		)
+
+	return temp;
+}
+
+export async function addSubnotepad(campaign, notepad, subnotepad){
+
+	let result = await api('https://dylan-s-database.firebaseio.com/dnd/campaigns/' + campaign + '.json', {
+			headers: {
+				"Content-type": "application/json; charset=UTF-8",
+				"Access-Control-Allow-Origin": "*",
+				"Access-Control-Allow-Methods": "POST, GET, OPTIONS, DELETE, PUT",
+				"Access-Control-Allow-Headers": "append,delete,entries,foreach,get,has,keys,set,values,Authorization"
+			}})
+	let temp = result.data;
+	if(temp[notepad] === ''){
+		temp[notepad] = [{subnotepad: subnotepad, notes: []}]
+	} else {
+		temp[notepad].push({subnotepad: subnotepad, notes: []})
+	}
+	
+	await api.put('https://dylan-s-database.firebaseio.com/dnd/campaigns/' + campaign + '.json',
+		temp
+		)
+
+	return temp;
+}
+
+export async function addNote(campaign, notepad, subnotepad, object, size){
+
+	let result = await api('https://dylan-s-database.firebaseio.com/dnd/campaigns/' + campaign + '.json', {
+			headers: {
+				"Content-type": "application/json; charset=UTF-8",
+				"Access-Control-Allow-Origin": "*",
+				"Access-Control-Allow-Methods": "POST, GET, OPTIONS, DELETE, PUT",
+				"Access-Control-Allow-Headers": "append,delete,entries,foreach,get,has,keys,set,values,Authorization"
+			}})
+	let temp = result.data;
+	for(let i = 0; i < temp[notepad].length; i++){
+		if(temp[notepad][i].subnotepad === subnotepad){
+			if(Object.keys(temp[notepad][i]).includes('notes')){
+				temp[notepad][i].notes.push({object: String(object), pLeft: '200', pTop: '200', size: size});
+			} else {
+				temp[notepad][i]['notes'] = [{object: String(object), pLeft: '200', pTop: '200', size: size}];
+			}
+		}
+	}
+	
+	await api.put('https://dylan-s-database.firebaseio.com/dnd/campaigns/' + campaign + '.json',
+		temp
+		)
+
+	return temp;
+}
+
+export async function updateNote(campaign, notepad, subnotepad, notes){
+
+	let result = await api('https://dylan-s-database.firebaseio.com/dnd/campaigns/' + campaign + '.json', {
+			headers: {
+				"Content-type": "application/json; charset=UTF-8",
+				"Access-Control-Allow-Origin": "*",
+				"Access-Control-Allow-Methods": "POST, GET, OPTIONS, DELETE, PUT",
+				"Access-Control-Allow-Headers": "append,delete,entries,foreach,get,has,keys,set,values,Authorization"
+			}})
+	let temp = result.data;
+	for(let i = 0; i < temp[notepad].length; i++){
+		if(temp[notepad][i].subnotepad === subnotepad){
+			temp[notepad][i].notes = notes;
+		}
+	}
+	console.log(temp)
+	await api.put('https://dylan-s-database.firebaseio.com/dnd/campaigns/' + campaign + '.json',
+		temp
+		)
+
+	return temp;
+}

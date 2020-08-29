@@ -10,6 +10,7 @@ import Roller from './DND/roller';
 import {handleUpdate5e, handleGrab5e} from '../actions/5eInfo';
 import {handleGrabDraggable, handleNewEnvironment, changeCurrentEnv, handleGrabOptions} from '../actions/draggable';
 import ButtonGroup from 'react-bootstrap/ButtonGroup'
+import {handleGrabCampaigns, handleChangeCampaign} from '../actions/notes';
 
 class DNDGuest extends Component {
 
@@ -22,6 +23,7 @@ class DNDGuest extends Component {
 
 	componentDidMount(){
 		this.props.handleGrabOptions();
+		this.props.handleGrabCampaigns();
 		if(!this.props.envOptions.current) { 
 			setTimeout(this.props.changeCurrentEnv(this.props.envOptions.all[0]), 500) 
 		}
@@ -32,6 +34,11 @@ class DNDGuest extends Component {
 			this.props.handleGrabDraggable(this.props.envOptions.current);
 		} else {
 			this.props.handleGrabDraggable(this.props.envOptions.all[0])
+		}
+		if(this.props.notesOptions.current.campaign){
+			this.props.handleChangeCampaign(this.props.notesOptions.current.campaign);
+		} else {
+			this.props.handleChangeCampaign(this.props.notesOptions.all[0])
 		}
 	}
 
@@ -101,7 +108,8 @@ class DNDGuest extends Component {
 const mapStateToProps = state => {
 	return{
         dndInfo: state.dndInfo,
-		envOptions: state.envOptions
+		envOptions: state.envOptions,
+		notesOptions: state.notesOptions
 	}
 }
 
@@ -111,5 +119,7 @@ export default connect(mapStateToProps, {
 	handleGrabDraggable,
 	handleNewEnvironment,
 	changeCurrentEnv, 
-	handleGrabOptions
+	handleGrabOptions,
+	handleGrabCampaigns,
+	handleChangeCampaign
 })(DNDGuest);

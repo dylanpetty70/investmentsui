@@ -22,10 +22,10 @@ class GridLayer extends Component {
 				width: '75vw',
 				height: this.props.draggable.scale,
 				border: '1px solid',
-				borderColor: 'darkGrey',
+				borderColor: 'white',
 				left: '10px',
 				top: variableTop,
-				opacity: .5,
+				opacity: .25,
 				zIndex: 1000,
 				pointerEvents: 'none'
 			}
@@ -34,10 +34,10 @@ class GridLayer extends Component {
 				width: this.props.draggable.scale,
 				height: '75vw',
 				border: '1px solid',
-				borderColor: 'darkGrey',
+				borderColor: 'white',
 				left: variableLeft,
 				top: '127px',
-				opacity: .5,
+				opacity: .25,
 				zIndex: 1000,
 				pointerEvents: 'none'
 			}

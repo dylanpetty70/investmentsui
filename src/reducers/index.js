@@ -13,6 +13,8 @@ import multipleStocks from './multipleStocks';
 import dndInfo from './dndInfo';
 import draggable from './draggable';
 import envOptions from './envOptions';
+import notepads from './notepads';
+import notesOptions from './notesOptions';
 
 export default combineReducers({
 	govBondRate,
@@ -27,5 +29,7 @@ export default combineReducers({
 	multipleStocks,
 	dndInfo,
 	draggable,
-	envOptions
+	envOptions,
+	notepads,
+	notesOptions
 })

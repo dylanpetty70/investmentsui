@@ -11,6 +11,7 @@ import Roller from './DND/roller';
 import {handleUpdate5e, handleGrab5e} from '../actions/5eInfo';
 import {handleGrabDraggable, handleNewEnvironment, changeCurrentEnv, handleGrabOptions} from '../actions/draggable';
 import ButtonGroup from 'react-bootstrap/ButtonGroup'
+import {handleGrabCampaigns, handleChangeCampaign} from '../actions/notes';
 
 class DND extends Component {
 
@@ -24,6 +25,7 @@ class DND extends Component {
 
 	componentDidMount(){
 		this.props.handleGrabOptions();
+		this.props.handleGrabCampaigns();
 		if(!this.props.envOptions.current) { 
 			setTimeout(this.props.changeCurrentEnv(this.props.envOptions.all[0]), 500) 
 		}
@@ -35,6 +37,11 @@ class DND extends Component {
 		} else {
 			this.props.handleGrabDraggable(this.props.envOptions.all[0])
 		}
+		if(this.props.notesOptions.current.campaign){
+			this.props.handleChangeCampaign(this.props.notesOptions.current.campaign);
+		} else {
+			this.props.handleChangeCampaign(this.props.notesOptions.all[0])
+		}
 	}
 
 	redirectNonuser(){
@@ -44,15 +51,17 @@ class DND extends Component {
 	}
 
 	//campaignDetails
+		//sticky note layout
+			//with colored, sizable, moveable, different shaped notes
 		//description of next session
 		//general overview of world
 		//Names/characters/familiars
 		//one note type structure by the same gameinfo navigation
 		//campaign  selectable
+		//separate out what the dnd knows and what the players see
 	
-	//Tag things in each gameinfo component
 	//audio for game ambiance https://freepd.com/music/Ancient%20Rite.mp3
-
+	//reformat gameInfo stuff
 	//dashboard: per user, tag things you want in your dashboard - future feature
 
 	navTabs(){
@@ -132,5 +141,7 @@ export default connect(mapStateToProps, {
 	handleGrabDraggable,
 	handleNewEnvironment,
 	changeCurrentEnv, 
-	handleGrabOptions
+	handleGrabOptions,
+	handleGrabCampaigns,
+	handleChangeCampaign
 })(DND);
