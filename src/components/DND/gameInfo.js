@@ -17,26 +17,27 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Card from 'react-bootstrap/Card';
 import { Typeahead } from 'react-bootstrap-typeahead';
+import {handleGrab5e} from '../../actions/5eInfo';
 
 class GameInfo extends Component {
 
 	constructor(props){
 		super(props);
-        this.state = {page: 'spells', tempSearch: '', placeholder: 'Spell', selected: '', searchLabel: 'Spells'};
+        this.state = {page: 'spells', tempSearch: '', placeholder: 'Spell', selected: '', searchLabel: 'Spells', dndInfo: []};
 		this.navTabs = this.navTabs.bind(this);
 		this.switchStatement = this.switchStatement.bind(this);
 		this.options = this.options.bind(this);
 	}
 
 	componentDidMount(){
-		
+		if(Object.keys(this.props.dndInfo).length > 0){
+			this.props.handleGrab5e();
+		}
 	}
 
 	options(category){
 		let temp = [];
-		if(this.props.dndInfo !== {}){
-			temp = Object.keys(this.props.dndInfo.generalInfo.specifics[category])
-		}
+		temp = Object.keys(this.props.dndInfo.generalInfo.specifics[category]);
 		return temp;
 	}
 
@@ -128,13 +129,13 @@ class GameInfo extends Component {
 				<Form inline={true}>
 					<Form.Label style={{fontSize: '16px', marginRight: '30px'}}>{'Search ' + this.state.searchLabel}</Form.Label>
 					<Form.Group>
-						<Typeahead
+						{(Object.keys(this.props.dndInfo).length > 0) ? <Typeahead
 								id="searchGameInfo"
 								labelKey="gameInfo"
 								onChange={(text) => {this.setState({...this.state, tempSearch: text[0]})}}
 								options={this.options(this.state.page)}
 								placeholder={"Choose a "+ this.state.placeholder + "..."}
-						/>
+						/> : <></>}
 					</Form.Group>
 				</Form>
 			</div>
@@ -162,4 +163,4 @@ const mapStateToProps = state => {
 	}
 }
 
-export default connect(mapStateToProps)(GameInfo);
+export default connect(mapStateToProps, {handleGrab5e})(GameInfo);

@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import ButtonGroup from 'react-bootstrap/ButtonGroup';
+import ToggleButton from 'react-bootstrap/ToggleButton';
 
 class GridLayer extends Component {
 
 	constructor(props){
 		super(props);
-		this.state = {}
+		this.state = {checked: true}
 		this.createGrid = this.createGrid.bind(this);
 	}
 
@@ -22,7 +24,7 @@ class GridLayer extends Component {
 				width: '75vw',
 				height: this.props.draggable.scale,
 				border: '1px solid',
-				borderColor: 'white',
+				borderColor: (this.state.checked) ? 'white' : 'black',
 				left: '10px',
 				top: variableTop,
 				opacity: .25,
@@ -34,7 +36,7 @@ class GridLayer extends Component {
 				width: this.props.draggable.scale,
 				height: '75vw',
 				border: '1px solid',
-				borderColor: 'white',
+				borderColor: (this.state.checked) ? 'white' : 'black',
 				left: variableLeft,
 				top: '127px',
 				opacity: .25,
@@ -61,6 +63,17 @@ class GridLayer extends Component {
 		return(
 			<div>
 				{this.createGrid()}
+				<ButtonGroup toggle style={{position: 'absolute', top: '66px', width: '100px', left: '880px'}}>
+					<ToggleButton
+					  type="checkbox"
+					  variant="secondary"
+					  checked={this.state.checked}
+					  value="true"
+					  onChange={() => this.setState({...this.state, checked: !this.state.checked})}
+					>
+					  Grid Color
+					</ToggleButton>
+				  </ButtonGroup>
 			</div>
 		)
 	}

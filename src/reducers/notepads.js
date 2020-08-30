@@ -4,7 +4,8 @@ ADD_CAMPAIGN,
 ADD_NOTEPAD,
 ADD_SUBNOTEPAD,
 ADD_NOTE,
-UPDATE_NOTE
+UPDATE_NOTE,
+DELETE_NOTE
 } from '../actions/notes';
 
 
@@ -18,6 +19,7 @@ export default function notepads(state = {}, action) {
 		case ADD_SUBNOTEPAD:
 		case ADD_NOTE:
 		case UPDATE_NOTE:
+		case DELETE_NOTE:
 			return action.data;
 		default:
 			return state;

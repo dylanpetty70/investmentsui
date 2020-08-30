@@ -8,6 +8,7 @@ export const GRAB_CAMPAIGNS = 'GRAB_CAMPAIGNS';
 export const CHANGE_SUBNOTEPAD = 'CHANGE_SUBNOTEPAD';
 export const CHANGE_NOTEPAD = 'CHANGE_NOTEPAD';
 export const UPDATE_NOTE = 'UPDATE_NOTE';
+export const DELETE_NOTE = 'DELETE_NOTE';
 
 function grabCampaigns(data){
 	return{
@@ -58,6 +59,13 @@ function addNote(data){
 function updateNote(data){
 	return {
 		type: UPDATE_NOTE,
+		data
+	}
+}
+
+function deleteNote(data){
+	return {
+		type: DELETE_NOTE,
 		data
 	}
 }
@@ -136,6 +144,15 @@ export function handleUpdateNote(campaign, notepad, subnotepad, note){
 		await api.updateNote(campaign, notepad, subnotepad, note)
 			.then((data) => {
 				dispatch(updateNote(data));
+			})
+	}
+}
+
+export function handleDeleteNote(campaign, notepad, subnotepad, note){
+	return async (dispatch) => {
+		await api.deleteNote(campaign, notepad, subnotepad, note)
+			.then((data) => {
+				dispatch(deleteNote(data));
 			})
 	}
 }

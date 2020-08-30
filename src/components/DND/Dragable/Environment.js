@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import Container from './Container';
 import DragLayer from './CustomDragLayer';
 import { connect } from 'react-redux';
-import {handleGrabDraggable, handleAddNewItem, handleUpdateCurrent, handleNewEnvironment} from '../../../actions/draggable';
+import {handleGrabDraggable, handleAddNewItem, handleUpdateCurrent, handleNewEnvironment, changeCurrentEnv} from '../../../actions/draggable';
 import CustomPanel from './CustomPanel';
 import GridLayer from './GridLayer';
+import Button from 'react-bootstrap/Button';
 
 
 
@@ -23,6 +24,7 @@ class Environment extends Component {
 		return(
 			<div style={{width: '95vw', margin: '5px'}}>
             <div style={{height: '75vw', width: '75vw', position: 'flex'}}>
+			<Button variant="outline-secondary" style={{position: 'absolute', top: '66px', width: '100px', left: '770px'}} onClick={() => {this.props.handleGrabDraggable(this.props.envOptions.current)}}>Refresh</Button>
 				<GridLayer />
 				<Container snapToGridAfterDrop={true} />
 				<DragLayer snapToGridWhileDragging={true}/>
@@ -40,4 +42,4 @@ const mapStateToProps = state => {
 	}
 }
 
-export default connect(mapStateToProps, {handleAddNewItem, handleGrabDraggable, handleUpdateCurrent, handleNewEnvironment})(Environment);
+export default connect(mapStateToProps, {handleAddNewItem, handleGrabDraggable, handleUpdateCurrent, handleNewEnvironment, changeCurrentEnv})(Environment);

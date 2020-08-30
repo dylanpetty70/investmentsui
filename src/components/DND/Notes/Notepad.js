@@ -22,17 +22,25 @@ class Notepad extends Component {
 					tempNotepadName: '', 
 					tempSubnotepadName: '',
 					tempCampaignName: '',
-					subnotepads: []
+					subnotepads: [],
+					boxes: {},
+					items: []
 					}
 		this.subnotepads = this.subnotepads.bind(this);
 		this.notepads = this.notepads.bind(this);
 		this.addNotepad = this.addNotepad.bind(this);
 		this.addSubnotepad = this.addSubnotepad.bind(this);
 		this.updateSubState = this.updateSubState.bind(this);
+		this.updateBoxes1 = this.updateBoxes1.bind(this);
 	}
 
 	componentDidMount(){
 		this.updateSubState();
+		if(this.props.notesOptions.current.campaign){
+			this.props.handleChangeCampaign(this.props.notesOptions.current.campaign)
+		} else {
+			this.props.handleChangeCampaign(this.props.notesOptions.all[0])
+		}
     }
 
 	updateSubState(){
@@ -62,6 +70,7 @@ class Notepad extends Component {
 			const handleSelect = (eventKey) => {
 				this.props.changeSubnotepad(eventKey);
 				this.updateSubState();
+				setTimeout(this.updateBoxes1(), 600);
 			}
 
 			return (
@@ -80,6 +89,30 @@ class Notepad extends Component {
 			</Nav>)
 		}
 	}	
+
+	updateBoxes1(){
+        let items = [];
+		console.log('here')
+        if(this.props.notesOptions.current.subnotepad !== '' & Object.keys(this.props.notepads).length > 0){
+            for(let i = 0; i < this.props.notepads[this.props.notesOptions.current.notepad].length; i++){
+                if(this.props.notepads[this.props.notesOptions.current.notepad][i].notepad === this.props.notesOptions.current.subnotepad){
+					if(this.props.notepads[this.props.notesOptions.current.notepad][i].notes){
+						items = this.props.notepads[this.props.notesOptions.current.notepad][i].notes;
+					}
+	            }
+            }
+        }
+		let temp = {};
+		if(items.length > 0){
+		for(let i = 0; i < items.length; i++){
+		temp[['id' + i]] = {id: 'id'+i, top: Number(items[i].pTop), left: Number(items[i].pLeft), object: items[i].object, size: items[i].size};
+		}
+		this.setState({...this.state, boxes: temp, items: items});
+		} else {
+			temp = {};  
+			this.setState({...this.state, boxes: temp, items: items});
+		}
+    };
 	
 	notepads(){
 		if(this.props.notepads !== {} & this.props.notesOptions.current.notepad !== ''){
@@ -87,6 +120,7 @@ class Notepad extends Component {
 			const handleSelect = (eventKey) => {
 				this.props.changeNotepad(eventKey, this.props.notepads[eventKey]);
 				this.updateSubState();
+				setTimeout(this.updateBoxes1(), 600);
 			}
 			let temp = [];
 			for(let i = 0; i < notepads.length; i++){
@@ -201,7 +235,7 @@ class Notepad extends Component {
 							labelKey="campaigns"
 							onChange={(text) => {if(this.props.notesOptions.all.includes(text[0])){this.props.handleChangeCampaign(text[0])}; this.updateSubState();}}
 							options={this.props.notesOptions.all}
-							placeholder="Choose a campaign..."
+							placeholder={this.props.notesOptions.current.campaign}
 							value={this.props.notesOptions.current.campaign}
 							style={{height: '36px'}}
 						/>
@@ -215,7 +249,7 @@ class Notepad extends Component {
 					{this.subnotepads()}
 				</div>
             <div style={{height: '75vw', width: '75vw', position: 'flex'}}>
-				<Container/>
+				<Container boxes={this.state.boxes} items={this.state.items}/>
 				<DragLayer/>
             </div>
 				<CustomPanel />

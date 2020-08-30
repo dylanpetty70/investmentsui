@@ -509,7 +509,26 @@ export async function updateNote(campaign, notepad, subnotepad, notes){
 			temp[notepad][i].notes = notes;
 		}
 	}
-	console.log(temp)
+	await api.put('https://dylan-s-database.firebaseio.com/dnd/campaigns/' + campaign + '.json',
+		temp
+		)
+
+	return temp;
+}
+
+export async function deleteNote(campaign, notepad, subnotepad, notes){
+
+	let result = await api('https://dylan-s-database.firebaseio.com/dnd/campaigns/' + campaign + '.json', {
+			headers: {
+				"Content-type": "application/json; charset=UTF-8",
+				"Access-Control-Allow-Origin": "*",
+				"Access-Control-Allow-Methods": "POST, GET, OPTIONS, DELETE, PUT",
+				"Access-Control-Allow-Headers": "append,delete,entries,foreach,get,has,keys,set,values,Authorization"
+			}})
+	let temp = result.data;
+	for(let i = 0; i < temp[notepad].length; i++){
+		temp[notepad][i].notes = notes;
+	}
 	await api.put('https://dylan-s-database.firebaseio.com/dnd/campaigns/' + campaign + '.json',
 		temp
 		)

@@ -27,15 +27,12 @@ class DND extends Component {
 		this.props.handleGrabOptions();
 		this.props.handleGrabCampaigns();
 		if(!this.props.envOptions.current) { 
-			setTimeout(this.props.changeCurrentEnv(this.props.envOptions.all[0]), 500) 
+			if(this.props.envOptions.all){
+				setTimeout(this.props.changeCurrentEnv(this.props.envOptions.all[0]), 500) 
+			}
 		}
 		if(!this.props.dndInfo.generalInfo){
 			this.props.handleGrab5e();
-		}
-		if(this.props.envOptions.current){
-			this.props.handleGrabDraggable(this.props.envOptions.current);
-		} else {
-			this.props.handleGrabDraggable(this.props.envOptions.all[0])
 		}
 		if(this.props.notesOptions.current.campaign){
 			this.props.handleChangeCampaign(this.props.notesOptions.current.campaign);
@@ -59,6 +56,8 @@ class DND extends Component {
 		//one note type structure by the same gameinfo navigation
 		//campaign  selectable
 		//separate out what the dnd knows and what the players see
+
+	//env: options for black or white grid
 	
 	//audio for game ambiance https://freepd.com/music/Ancient%20Rite.mp3
 	//reformat gameInfo stuff
@@ -131,7 +130,9 @@ class DND extends Component {
 const mapStateToProps = state => {
 	return{
         dndInfo: state.dndInfo,
-		envOptions: state.envOptions
+		envOptions: state.envOptions,
+		notesOptions: state.notesOptions,
+		notepads: state.notepads
 	}
 }
 

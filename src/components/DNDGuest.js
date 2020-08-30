@@ -25,20 +25,12 @@ class DNDGuest extends Component {
 		this.props.handleGrabOptions();
 		this.props.handleGrabCampaigns();
 		if(!this.props.envOptions.current) { 
-			setTimeout(this.props.changeCurrentEnv(this.props.envOptions.all[0]), 500) 
+			if(this.props.envOptions.all){
+				setTimeout(this.props.changeCurrentEnv(this.props.envOptions.all[0]), 500) 
+			}
 		}
 		if(!this.props.dndInfo.generalInfo){
 			this.props.handleGrab5e();
-		}
-		if(this.props.envOptions.current){
-			this.props.handleGrabDraggable(this.props.envOptions.current);
-		} else {
-			this.props.handleGrabDraggable(this.props.envOptions.all[0])
-		}
-		if(this.props.notesOptions.current.campaign){
-			this.props.handleChangeCampaign(this.props.notesOptions.current.campaign);
-		} else {
-			this.props.handleChangeCampaign(this.props.notesOptions.all[0])
 		}
 	}
 
